@@ -1,8 +1,8 @@
-# JobLinker: Mobile Service Marketplace App
+# CraftMate: Mobile Service Marketplace App
 
 ## Overview
 
-JobLinker connects independent service providers like plumbers, electricians, and other professionals with users looking for their services. The platform allows service providers to create profiles, showcase their skills, receive reviews, and manage appointments, making it easier for users to find reliable help.
+CraftMate connects independent service providers like plumbers, electricians, and other professionals with users looking for their services. The platform allows service providers to create profiles, showcase their skills, receive reviews, and manage appointments, making it easier for users to find reliable help.
 
 ## Initial Features
 
