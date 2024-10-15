@@ -1,8 +1,9 @@
-# Mobile Service Marketplace App
+# JobLinker: Your Local Link to Trusted Pros
+## Mobile Service Marketplace App
 
 ## Overview
 
-This mobile application connects independent service providers like plumbers, electricians, and other professionals with users looking for their services. The platform allows service providers to create profiles, showcase their skills, receive reviews, and manage appointments, making it easier for users to find reliable help.
+JobLinker connects independent service providers like plumbers, electricians, and other professionals with users looking for their services. The platform allows service providers to create profiles, showcase their skills, receive reviews, and manage appointments, making it easier for users to find reliable help.
 
 ## Initial Features
 
