@@ -1,5 +1,4 @@
-# JobLinker: Your Local Link to Trusted Pros
-## Mobile Service Marketplace App
+# JobLinker: Mobile Service Marketplace App
 
 ## Overview
 
