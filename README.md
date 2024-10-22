@@ -1,13 +1,17 @@
-# CraftMate: Mobile Service Marketplace App
+# CityStories - Pin your memories
 
 ## Overview
 
-CraftMate connects independent service providers like plumbers, electricians, and other professionals with users looking for their services. The platform allows service providers to create profiles, showcase their skills, receive reviews, and manage appointments, making it easier for users to find reliable help.
+CityStories is a unique mobile application that lets users capture and share their personal memories, stories, and experiences by placing pins on a digital map of Timișoara. Users can anonymously mark locations where meaningful moments happened, leave personal notes and even reply to others’ pins. The app encourages community interaction through shared memories while allowing users to remain private.
 
 ## Initial Features
 
-- **User and Worker Profiles**: Service providers can create profiles with details about their services, pricing, and availability. Users can also have profiles to track their appointments and service history.
-- **Reviews and Ratings**: Users can leave feedback for workers based on the quality of the service provided, helping others to make informed decisions.
-- **Appointment Booking**: Users can schedule services with available providers, and both parties receive notifications for upcoming appointments.
-- **Search and Filters**: Users can filter service providers by location, service type, rating, and availability.
-- **Push Notifications**: Reminders and notifications for upcoming appointments, new reviews, and profile updates.
+- **Pin Your Memories: Add memory pins to specific locations on the map, along with personal notes or stories that highlight your experiences in the city.
+- **Anonymous Sharing: Users can post memories and stories without revealing their identity, fostering an environment of openness while maintaining privacy.
+- **Explore the City’s Stories: Discover new and hidden stories as you explore Timișoara’s digital map, populated with pins shared by others in the community.
+- **Likes and Replies: Show your appreciation for a memory by liking a pin or engage in conversation by leaving replies.
+- **Pin of the Week: Each week, the pin with the most likes will be featured on the map, giving it special recognition and allowing everyone to revisit the story that has captivated the community.
+- **Customize Pin Visibility: Choose how long your memory stays on the map – from 24 hours to permanent visibility.
+- **Community Challenges: Participate in fun and engaging challenges by sharing pins that follow a theme, like "My First Visit" or "Hidden Gems of Timișoara."
+- **Track Your Pins: Keep track of your contributions, view how many likes and replies your pins have received, and check out your personal collection of memories.
+- **Moderation Tools: Users can report or flag inappropriate content to ensure that CityStories remains a safe and welcoming space for everyone.
