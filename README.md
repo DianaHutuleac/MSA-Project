@@ -15,3 +15,7 @@ CityStories is a unique mobile application that lets users capture and share the
 - Community Challenges: Participate in fun and engaging challenges by sharing pins that follow a theme, like "My First Visit" or "Hidden Gems of Timișoara."
 - Track Your Pins: Keep track of your contributions, view how many likes and replies your pins have received, and check out your personal collection of memories.
 - Moderation Tools: Users can report or flag inappropriate content to ensure that CityStories remains a safe and welcoming space for everyone.
+
+### Database Structure
+
+![Database Schema](https://github.com/DianaHutuleac/MSA-Project/blob/main/citystories_db.png)
