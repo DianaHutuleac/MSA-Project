@@ -1,4 +1,4 @@
-# CityStories - Pin your memories <img src="https://github.com/DianaHutuleac/MSA-Project/blob/main/city-stories-logo.png" alt="CityStories Logo" width="500" style="vertical-align:right;" />
+# CityStories - Pin your memories <img src="https://github.com/DianaHutuleac/MSA-Project/blob/main/city-stories-logo.png" alt="CityStories Logo" width="300" style="vertical-align:right;" />
 
 ## Overview
 
