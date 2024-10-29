@@ -19,3 +19,97 @@ CityStories is a unique mobile application that lets users capture and share the
 ### Database Structure
 
 ![Database Schema](https://github.com/DianaHutuleac/MSA-Project/blob/main/citystories_db.png)
+
+
+# CityStories API Endpoints V1
+## Authentication
+
+### User Registration
+- **POST** `/users/register`
+    - **Request Body:**
+      ```json
+      {
+        "email": "user@example.com",
+        "password": "yourPassword"
+      }
+      ```
+    - **Responses:**
+        - `201 Created`: User successfully registered.
+        - `400 Bad Request`: Validation errors.
+
+### User Login
+- **POST** `/users/login`
+    - **Request Body:**
+      ```json
+      {
+        "email": "user@example.com",
+        "password": "yourPassword"
+      }
+      ```
+    - **Responses:**
+        - `200 OK`: Login successful.
+        - `401 Unauthorized`: Invalid credentials.
+
+### Get User Details
+- **GET** `/users/{id}`
+    - **Responses:**
+        - `200 OK`: User details retrieved.
+        - `404 Not Found`: User not found.
+
+---
+
+## Pins
+
+### Create a Pin
+- **POST** `/pins`
+    - **Request Body:**
+      ```json
+      {
+        "story": "Your story here...",
+        "visibility_duration": "24 hours",
+        "user_id": 1
+      }
+      ```
+    - **Responses:**
+        - `201 Created`: Pin successfully created.
+        - `400 Bad Request`: Validation errors.
+
+### Get All Pins
+- **GET** `/pins`
+    - **Responses:**
+        - `200 OK`: List of all pins.
+
+### Get Pin by ID
+- **GET** `/pins/{id}`
+    - **Responses:**
+        - `200 OK`: Pin details retrieved.
+        - `404 Not Found`: Pin not found.
+
+### Get Pin of the Week
+- **GET** `/pins/pinoftheweek`
+    - **Responses:**
+        - `200 OK`: Pin of the week retrieved.
+
+---
+
+## Comments
+
+### Create a Comment For a Pin.
+- **POST** `/comments`
+    - **Request Body:**
+      ```json
+      {
+        "content": "Your comment here...",
+        "pin_id": 1
+      }
+      ```
+    - **Responses:**
+        - `201 Created`: Comment successfully created.
+        - `400 Bad Request`: Validation errors.
+
+### Get Comments For a Specific Pin by its ID.
+- **GET** `/comments?pinId={pinId}`
+    - **Responses:**
+        - `200 OK`: List of comments for the specified pin.
+---
+
