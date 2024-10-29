@@ -1,3 +1,5 @@
+![CityStories Logo](https://github.com/DianaHutuleac/MSA-Project/blob/main/city-stories-logo.png)
+
 # CityStories - Pin your memories
 
 ## Overview
