@@ -9,7 +9,7 @@ CityStories is a unique mobile application that lets users capture and share the
 - Pin Your Memories: Add memory pins to specific locations on the map, along with personal notes or stories that highlight your experiences in the city.
 - Anonymous Sharing: Users can post memories and stories without revealing their identity, fostering an environment of openness while maintaining privacy.
 - Explore the City’s Stories: Discover new and hidden stories as you explore Timișoara’s digital map, populated with pins shared by others in the community.
-- Likes and Replies: Show your appreciation for a memory by liking a pin or engage in conversation by leaving replies.
+- Likes and Comments: Show your appreciation for a memory by liking a pin or engage in conversation by leaving comments.
 - Pin of the Week: Each week, the pin with the most likes will be featured on the map, giving it special recognition and allowing everyone to revisit the story that has captivated the community.
 - Customize Pin Visibility: Choose how long your memory stays on the map – from 24 hours to permanent visibility.
 - Community Challenges: Participate in fun and engaging challenges by sharing pins that follow a theme, like "My First Visit" or "Hidden Gems of Timișoara."
