@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="citystories_db@localhost" uuid="13b5ef48-7fc0-4bc4-a094-781fb79b1d36">
+    <data-source source="LOCAL" name="citystories_db@localhost" uuid="30285f4b-f707-4b7b-904f-9796612cb469">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
-      <remarks>$PROJECT_DIR$/src/main/resources/application.properties</remarks>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/citystories_db</jdbc-url>
       <jdbc-additional-properties>
