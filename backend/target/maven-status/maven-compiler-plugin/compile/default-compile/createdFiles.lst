@@ -1,6 +1,0 @@
-com/citystories/demo/domain/entity/Pin.class
-com/citystories/demo/CityStoriesApplication.class
-com/citystories/demo/domain/enums/VisibilityDuration.class
-com/citystories/demo/domain/dto/PinCreateDto.class
-com/citystories/demo/domain/entity/Comment.class
-com/citystories/demo/domain/entity/UserData.class
