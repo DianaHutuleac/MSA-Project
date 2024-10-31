@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.citystories.demo.CityStoriesApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.476 s -- in com.citystories.demo.CityStoriesApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.445 s -- in com.citystories.demo.CityStoriesApplicationTests
