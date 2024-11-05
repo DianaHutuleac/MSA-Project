@@ -7,10 +7,18 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
+import { useAuth } from '@/app/context/AuthContext';
+import { Tabs } from 'expo-router';
+
+
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+
+  const { isLoggedIn } = useAuth();
+
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -26,6 +34,15 @@ export default function RootLayout() {
     return null;
   }
 
+  return isLoggedIn ? (
+    <Tabs />
+  ) : (
+    <Stack>
+      <Stack.Screen name="auth/login" options={{ title: 'Login' }} />
+      <Stack.Screen name="auth/register" options={{ title: 'Register' }} />
+    </Stack>
+  );
+/*
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
@@ -33,5 +50,5 @@ export default function RootLayout() {
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
-  );
+  );*/
 }
