@@ -18,18 +18,20 @@ import java.util.List;
 public class Pin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @Column(length = 5000)
     private String story;
 
-    private Long numberOfLikes;
+    private Integer numberOfLikes;
 
-    @OneToMany(mappedBy = "pin")
+    @OneToMany(mappedBy = "pin", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
     @Enumerated(EnumType.STRING)
     private VisibilityDuration visibilityDuration;
+
+    private LocalDateTime expiresAt;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -37,6 +39,13 @@ public class Pin {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+        this.numberOfLikes = 0;
+        switch (this.visibilityDuration) {
+            case DAY -> this.expiresAt = createdAt.plusDays(1);
+            case WEEK -> this.expiresAt = createdAt.plusWeeks(1);
+            case MONTH -> this.expiresAt = createdAt.plusMonths(1);
+            case PERMANENT -> this.expiresAt = null;
+        }
     }
 
     @ManyToOne

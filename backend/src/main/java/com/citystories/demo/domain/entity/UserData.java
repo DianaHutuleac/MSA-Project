@@ -24,4 +24,7 @@ public class UserData {
 
     @OneToMany(mappedBy = "user")
     private List<Pin> pins;
+
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments;
 }

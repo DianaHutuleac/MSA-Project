@@ -1,4 +1,4 @@
-package com.citystories.demo.domain.dto;
+package com.citystories.demo.domain.dto.pin;
 
 import com.citystories.demo.domain.enums.VisibilityDuration;
 import lombok.AllArgsConstructor;

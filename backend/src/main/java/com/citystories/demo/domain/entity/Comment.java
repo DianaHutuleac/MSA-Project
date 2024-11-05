@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -22,4 +24,16 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "pin_id")
     private Pin pin;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserData user;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }
