@@ -2,6 +2,7 @@
 /backend/src/main/resources/application-secret.properties
 /backend/.idea/
 /backend/target
+/backend/backend-old
 /frontend/node_modules/
 /frontend/.expo/
 /frontend/dist/
@@ -13,7 +14,7 @@
 /frontend/*.mobileprovision
 /frontend/*.orig.*
 /frontend/web-build/
-
+/.idea
 # macOS
 /frontend/.DS_Store
 
@@ -22,3 +23,42 @@
 
 /frontend/expo-env.d.ts
 # @end expo-cli
+
+
+/backend/backend-new/HELP.md
+/backend/backend-new/.gradle
+/backend/backend-new/build/
+/backend/backend-new/!gradle/wrapper/gradle-wrapper.jar
+/backend/backend-new/!**/src/main/**/build/
+/backend/backend-new/!**/src/test/**/build/
+
+### STS ###
+/backend/backend-new/.apt_generated
+/backend/backend-new/.classpath
+/backend/backend-new/.factorypath
+/backend/backend-new/.project
+/backend/backend-new/.settings
+/backend/backend-new/.springBeans
+/backend/backend-new/.sts4-cache
+/backend/backend-new/bin/
+/backend/backend-new/!**/src/main/**/bin/
+/backend/backend-new/!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+/backend/backend-new/.idea
+/backend/backend-new/*.iws
+/backend/backend-new/*.iml
+/backend/backend-new/*.ipr
+/backend/backend-new/out/
+/backend/backend-new/!**/src/main/**/out/
+/backend/backend-new/!**/src/test/**/out/
+
+### NetBeans ###
+/backend/backend-new/nbproject/private/
+/backend/backend-new/nbbuild/
+/backend/backend-new/dist/
+/backend/backend-new/nbdist/
+/backend/backend-new/.nb-gradle/
+
+### VS Code ###
+/backend/backend-new/.vscode/
