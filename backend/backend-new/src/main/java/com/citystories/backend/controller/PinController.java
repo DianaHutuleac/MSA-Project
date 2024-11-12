@@ -21,11 +21,7 @@ public class PinController {
 
     @PostMapping
     public ResponseEntity<PinGetDto> createPin(@RequestBody PinCreateDto pinCreateDto) {
-        try {
-            PinGetDto pinGetDto = pinService.createPin(pinCreateDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(pinGetDto);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        PinGetDto pinGetDto = pinService.createPin(pinCreateDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(pinGetDto);
     }
 }
