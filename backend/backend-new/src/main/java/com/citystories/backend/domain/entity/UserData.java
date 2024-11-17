@@ -22,6 +22,8 @@ public class UserData {
 
     private String password;
 
+    private String role;
+
     @OneToMany(mappedBy = "user")
     private List<Pin> pins;
 
