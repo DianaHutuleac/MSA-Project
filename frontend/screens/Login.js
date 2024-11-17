@@ -1,16 +1,15 @@
-import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import React from "react";
+import { View, Text, Button, StyleSheet } from "react-native";
 
 export default function Login({ navigation }) {
   const handleLogin = () => {
-    // Perform login validation here
-    // On success, navigate to Tabs
-    navigation.replace('Tabs');
+    // After login success, navigate to the DrawerNavigator
+    navigation.replace('DrawerNavigator');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Login Screen</Text>
+      <Text>Welcome to City Stories</Text>
       <Button title="Login" onPress={handleLogin} />
     </View>
   );
@@ -19,11 +18,7 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  text: {
-    fontSize: 18,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

@@ -1,10 +1,16 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from "react";
+import { View, Text, Button, StyleSheet } from "react-native";
 
-export default function Register() {
+export default function Register({ navigation }) {
+  const handleRegister = () => {
+    // After registration success, navigate to the DrawerNavigator
+    navigation.replace('DrawerNavigator');
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Register Screen</Text>
+      <Text>Register to City Stories</Text>
+      <Button title="Register" onPress={handleRegister} />
     </View>
   );
 }
@@ -12,11 +18,7 @@ export default function Register() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  text: {
-    fontSize: 18,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
