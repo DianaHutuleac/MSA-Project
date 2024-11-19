@@ -30,21 +30,33 @@ export default function App() {
         <Stack.Screen 
           name="Welcome" 
           component={Welcome} 
-          options={{ headerShown: false }} 
+          options={{
+            headerTitle: '', 
+            headerBackTitleVisible: false, 
+            headerTransparent: true, 
+          }}
         />
 
         {/* Login Screen */}
         <Stack.Screen 
           name="Login" 
           component={Login} 
-          options={{ title: 'Login' }} 
+          options={{
+            headerTitle: '', 
+            headerBackTitleVisible: false, 
+            headerTransparent: true, 
+          }}
         />
         
         {/* Register Screen */}
         <Stack.Screen 
           name="Register" 
           component={Register} 
-          options={{ title: 'Register' }} 
+          options={{
+            headerTitle: '', 
+            headerBackTitleVisible: false, 
+            headerTransparent: true, 
+          }}
         />
 
         {/* Drawer Navigator for authenticated users */}
