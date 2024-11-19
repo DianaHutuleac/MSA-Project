@@ -3,20 +3,17 @@ import { View, Text, Button, StyleSheet } from 'react-native';
 
 export default function Profile({ navigation }) {
   const handleLogout = () => {
-    // Navigate back to the Welcome screen on logout
     navigation.replace('Welcome');
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>User Profile</Text>
-      {/* User Info Section */}
       <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>Name: John Doe</Text>
-        <Text style={styles.infoText}>Email: johndoe@example.com</Text>
+        <Text style={styles.infoText}>Name: test</Text>
+        <Text style={styles.infoText}>Email: test@test.com</Text>
       </View>
 
-      {/* Logout Button */}
       <Button title="Log Out" onPress={handleLogout} />
     </View>
   );

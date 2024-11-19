@@ -2,16 +2,15 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import Welcome from './screens/Welcome';  // Add Welcome Screen
-import Login from './screens/Login';      // Add Login Screen
-import Register from './screens/Register'; // Add Register Screen
-import Home from './screens/Home';        // Home Screen
-import Profile from './screens/Profile';  // Profile Screen
+import Welcome from './screens/Welcome';  
+import Login from './screens/Login';      
+import Register from './screens/Register'; 
+import Home from './screens/Home';        
+import Profile from './screens/Profile';  
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-// Drawer Navigation - Home and Profile
 function DrawerNavigator() {
   return (
     <Drawer.Navigator screenOptions={{ headerShown: false }}>
@@ -21,12 +20,10 @@ function DrawerNavigator() {
   );
 }
 
-// App component with stack and drawer navigation
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
-        {/* Welcome Screen */}
         <Stack.Screen 
           name="Welcome" 
           component={Welcome} 
@@ -37,7 +34,6 @@ export default function App() {
           }}
         />
 
-        {/* Login Screen */}
         <Stack.Screen 
           name="Login" 
           component={Login} 
@@ -48,7 +44,6 @@ export default function App() {
           }}
         />
         
-        {/* Register Screen */}
         <Stack.Screen 
           name="Register" 
           component={Register} 
@@ -59,7 +54,6 @@ export default function App() {
           }}
         />
 
-        {/* Drawer Navigator for authenticated users */}
         <Stack.Screen 
           name="DrawerNavigator" 
           component={DrawerNavigator} 

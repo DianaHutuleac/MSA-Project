@@ -6,7 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 export default function Home({ navigation }) {
   return (
     <View style={styles.container}>
-      {/* Hamburger Menu Icon */}
       <TouchableOpacity
         style={styles.menuButton}
         onPress={() => navigation.openDrawer()}
@@ -23,18 +22,16 @@ export default function Home({ navigation }) {
           longitudeDelta: 0.05,
         }}
         showsUserLocation={true}
-        zoomEnabled={true} // Ensures zoom gestures are enabled
-        scrollEnabled={true} // Enables map scrolling gestures
-        showsCompass={true} // Adds a compass for navigation
+        zoomEnabled={true} 
+        scrollEnabled={true}
+        showsCompass={true} 
       >
-        {/* Example Pin of the Week */}
         <Marker
           coordinate={{ latitude: 45.7519, longitude: 21.2234 }}
           pinColor="gold"
           title="Pin of the Week"
           description="This is the most liked story of the week!"
         />
-        {/* Example Challenge Pin */}
         <Marker
           coordinate={{ latitude: 45.7530, longitude: 21.2105 }}
           pinColor="red"
@@ -59,7 +56,7 @@ const styles = StyleSheet.create({
     top: 50,
     left: 20,
     zIndex: 1000,
-    backgroundColor: '#fff',
+    backgroundColor: '#fffff0',
     padding: 10,
     borderRadius: 50,
     shadowColor: '#000',

@@ -15,17 +15,14 @@ export default function Register({ navigation }) {
   const [password, setPassword] = useState("");
 
   const handleRegister = () => {
-    // Basic validation
     if (!email || !password) {
       Alert.alert("Error", "Please fill in both fields.");
       return;
     }
 
-    // Handle registration logic here (e.g., API call)
     console.log("Email:", email);
     console.log("Password:", password);
 
-    // Navigate to the app after successful registration
     navigation.replace("DrawerNavigator");
   };
 
@@ -39,7 +36,7 @@ export default function Register({ navigation }) {
       <View style={styles.container}>
         
         <Image
-            source={require('../assets/logo.png')} // Replace with your logo image path
+            source={require('../assets/logo.png')} 
             style={styles.logo}
           />
         
@@ -111,7 +108,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   button: {
-    backgroundColor: '#FFFFF0', // Button background color
+    backgroundColor: '#FFFFF0', 
     borderWidth: 0.2,
     borderRadius: 100,
     padding: 15,

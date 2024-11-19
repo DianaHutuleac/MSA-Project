@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, ImageBackground, StyleSheet, TouchableOpacity, Image } from "react-native";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    // Mock validation
     if (email && password) {
-      // After login success, navigate to the DrawerNavigator
       navigation.replace("DrawerNavigator");
     } else {
       alert("Please fill in all fields");
@@ -16,47 +14,70 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+    <ImageBackground
+      source={require('../assets/background_map.jpeg')} 
+      style={styles.background}
+    >
       <View style={styles.overlay} />
 
-      {/* Email Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-      />
+      <View style={styles.container}>
 
-      {/* Password Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry={true}
-        value={password}
-        onChangeText={setPassword}
-      />
+        <Image
+              source={require('../assets/logo.png')} 
+              style={styles.logo}
+            />
 
-      {/* Login Button */}
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
 
-      {/* Optional: Register Link */}
-      <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-        <Text style={styles.registerText}>Don't have an account? Register here</Text>
-      </TouchableOpacity>
-    </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+          />
+
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={setPassword}
+          />
+          
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.footerText}>
+            Don't have an account?{" "}
+            <Text
+              style={styles.link}
+              onPress={() => navigation.navigate("Register")}
+            >
+              Register here
+            </Text>
+          </Text>
+      </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  background: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#FFFFF0',
+    opacity: 0.3,
   },
   title: {
     fontSize: 24,
@@ -72,8 +93,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#",
   },
+  logo: {
+    width: 300,
+    height: 200,
+    marginBottom: 25,
+    resizeMode: 'contain',
+  },
   button: {
-    backgroundColor: '#FFFFF0', // Button background color
+    backgroundColor: '#FFFFF0', 
     borderWidth: 0.2,
     borderRadius: 100,
     padding: 15,
@@ -85,6 +112,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+  },
+  footerText: {
+    marginTop: 20,
+    fontSize: 14,
+    color: "#555",
+  },
+  link: {
+    color: "#010056",
+    fontWeight: "bold",
+    fontStyle: "italic",
+    textDecorationLine: "underline"
   },
   registerText: {
     marginTop: 15,

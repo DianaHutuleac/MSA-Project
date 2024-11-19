@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   button: {
-    backgroundColor: '#FFFFF0', // Button background color
+    backgroundColor: '#FFFFF0',
     borderWidth: 0.2,
     borderRadius: 100,
     padding: 15,
