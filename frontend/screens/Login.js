@@ -18,6 +18,7 @@ export default function Login({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
+      <View style={styles.overlay} />
 
       {/* Email Input */}
       <TextInput
@@ -39,8 +40,8 @@ export default function Login({ navigation }) {
       />
 
       {/* Login Button */}
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginButtonText}>Login</Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
       {/* Optional: Register Link */}
@@ -56,7 +57,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f8f8f8",
   },
   title: {
     fontSize: 24,
@@ -65,26 +65,26 @@ const styles = StyleSheet.create({
   },
   input: {
     width: "80%",
-    padding: 10,
+    padding: 15,
+    marginBottom: 10,
+    borderWidth: 0.5,
+    borderColor: "#000",
+    borderRadius: 5,
+    backgroundColor: "#",
+  },
+  button: {
+    backgroundColor: '#FFFFF0', // Button background color
+    borderWidth: 0.2,
+    borderRadius: 100,
+    padding: 15,
     marginVertical: 10,
-    backgroundColor: "#fff",
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: "#ddd",
+    width: '60%',
+    alignItems: 'center',
   },
-  loginButton: {
-    backgroundColor: "#007BFF",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginTop: 20,
-    width: "80%",
-    alignItems: "center",
-  },
-  loginButtonText: {
-    color: "#fff",
+  buttonText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
+    color: '#333',
   },
   registerText: {
     marginTop: 15,
