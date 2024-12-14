@@ -3,7 +3,7 @@ package com.citystories.backend.service.impl;
 
 import com.citystories.backend.domain.dto.pin.PinCreateDto;
 import com.citystories.backend.domain.dto.pin.PinEditDto;
-import com.citystories.backend.domain.dto.pin.PinGetDto;
+import com.citystories.backend.domain.dto.pin.PinResponseDto;
 import com.citystories.backend.domain.entity.Pin;
 import com.citystories.backend.domain.entity.UserData;
 import com.citystories.backend.exception.PinNotFoundException;
@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class PinServiceImpl implements PinService {
@@ -28,25 +29,72 @@ public class PinServiceImpl implements PinService {
     }
 
     @Override
-    public PinGetDto createPin(PinCreateDto pinCreateDto) {
+    public PinResponseDto getPin(Long id) {
+        Pin pin = findPinById(id);
+        return mapToResponseDto(pin);
+    }
+
+    @Override
+    public PinResponseDto getPinByUserId(Long userId) {
+        findUserById(userId);
+        Pin pin = findPinByUserId(userId);
+
+        return mapToResponseDto(pin);
+    }
+
+    @Override
+    public List<PinResponseDto> getAllPinsForUser(Long userId) {
+        findUserById(userId);
+        return mapToResponseDtoList(pinRepository.getAllPinsByUserId(userId));
+    }
+
+    @Override
+    public List<PinResponseDto> getAllPins() {
+        return mapToResponseDtoList(pinRepository.findAll());
+    }
+
+    @Override
+    public PinResponseDto createPin(PinCreateDto pinCreateDto) {
         UserData user = findUserById(pinCreateDto.getUserId());
         Pin pin = mapCreatePinDtoToPin(pinCreateDto, user);
         Pin createdPin = pinRepository.save(pin);
-        return PinMapper.INSTANCE.pinToPinGetDto(createdPin);
+        return mapToResponseDto(createdPin);
     }
 
     @Override
-    public PinGetDto getPin(Long id) {
+    public PinResponseDto updatePin(Long id, PinEditDto pinEditDto) {
         Pin pin = findPinById(id);
-        return PinMapper.INSTANCE.pinToPinGetDto(pin);
+        pinEditDto.setId(id);
+        Pin editedPin = applyEditsToPin(pinEditDto, pin);
+        return mapToResponseDto(pinRepository.save(editedPin));
     }
 
     @Override
-    public PinGetDto updatePin(Long id, PinEditDto pinEditDto) {
-        pinEditDto.setId(id);
-        Pin pin = findPinById(pinEditDto.getId());
-        Pin editedPin = applyEditsToPin(pinEditDto, pin);
-        return PinMapper.INSTANCE.pinToPinGetDto(editedPin);
+    public void deletePin(Long id) {
+        Pin pin = findPinById(id);
+        pinRepository.delete(pin);
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Override
+    public void deleteExpiredPins() {
+        LocalDateTime now = LocalDateTime.now();
+        pinRepository.deleteByExpiresAtBeforeAndExpiresAtIsNotNull(now);
+    }
+
+    private Pin findPinById(Long pinId) {
+        return pinRepository.findById(pinId)
+                .orElseThrow(() -> new PinNotFoundException("Pin with ID " + pinId + " not found"));
+    }
+
+    private Pin findPinByUserId(Long userId) {
+        return pinRepository.getPinByUserId(userId)
+                .orElseThrow(() -> new PinNotFoundException("Pin with User ID " + userId + " not found"));
+    }
+
+    private UserData findUserById(Long userId) {
+        return userDataRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found"));
     }
 
     private Pin applyEditsToPin(PinEditDto pinEditDto, Pin pin) {
@@ -59,32 +107,19 @@ public class PinServiceImpl implements PinService {
         return pinRepository.save(pin);
     }
 
-    @Override
-    public void deletePin(Long id) {
-        Pin pin = findPinById(id);
-        pinRepository.delete(pin);
+    private PinResponseDto mapToResponseDto(Pin pin) {
+        return PinMapper.INSTANCE.pinToPinGetDto(pin);
     }
 
-    private Pin findPinById(Long pinId) {
-        return pinRepository.findById(pinId)
-                .orElseThrow(() -> new PinNotFoundException("Pin with ID " + pinId + " not found"));
-    }
-
-    private UserData findUserById(Long userId) {
-        return userDataRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found"));
+    private List<PinResponseDto> mapToResponseDtoList(List<Pin> pins) {
+        return pins.stream()
+                .map(PinMapper.INSTANCE::pinToPinGetDto)
+                .toList();
     }
 
     private Pin mapCreatePinDtoToPin(PinCreateDto pinCreateDto, UserData user) {
         Pin pin = PinMapper.INSTANCE.pinCreateDtoToPin(pinCreateDto);
         pin.setUser(user);
         return pin;
-    }
-
-    @Scheduled(cron = "0 0 0 * * ?")
-    @Override
-    public void deleteExpiredPins() {
-        LocalDateTime now = LocalDateTime.now();
-        pinRepository.deleteByExpiresAtBeforeAndExpiresAtIsNotNull(now);
     }
 }

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PinGetDto {
+public class PinResponseDto {
     private Long id;
     private String story;
     private Long numberOfLikes;

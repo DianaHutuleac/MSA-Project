@@ -3,7 +3,7 @@ package com.citystories.backend.mapper;
 
 import com.citystories.backend.domain.dto.pin.PinCreateDto;
 import com.citystories.backend.domain.dto.pin.PinEditDto;
-import com.citystories.backend.domain.dto.pin.PinGetDto;
+import com.citystories.backend.domain.dto.pin.PinResponseDto;
 import com.citystories.backend.domain.entity.Pin;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,5 +18,5 @@ public interface PinMapper {
 
     Pin pinEditDtoToPin(PinEditDto pinEditDto);
 
-    PinGetDto pinToPinGetDto(Pin pin);
+    PinResponseDto pinToPinGetDto(Pin pin);
 }
