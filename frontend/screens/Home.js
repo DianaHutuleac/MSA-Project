@@ -1,17 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function Home({ navigation }) {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    const openListener = navigation.addListener('drawerOpen', () => {
+      setIsDrawerOpen(true);
+    });
+
+    const closeListener = navigation.addListener('drawerClose', () => {
+      setIsDrawerOpen(false);
+    });
+
+    // Cleanup listeners on unmount
+    return () => {
+      openListener();
+      closeListener();
+    };
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.menuButton}
-        onPress={() => navigation.openDrawer()}
-      >
-        <Ionicons name="menu" size={30} color="black" />
-      </TouchableOpacity>
+      {!isDrawerOpen && ( // Only show button when drawer is closed
+        <TouchableOpacity
+          style={styles.menuButton}
+          onPress={() => navigation.openDrawer()}
+        >
+          <Ionicons name="menu" size={30} color="black" />
+        </TouchableOpacity>
+      )}
 
       <MapView
         style={styles.map}
@@ -22,9 +42,9 @@ export default function Home({ navigation }) {
           longitudeDelta: 0.05,
         }}
         showsUserLocation={true}
-        zoomEnabled={true} 
+        zoomEnabled={true}
         scrollEnabled={true}
-        showsCompass={true} 
+        showsCompass={true}
       >
         <Marker
           coordinate={{ latitude: 45.7519, longitude: 21.2234 }}

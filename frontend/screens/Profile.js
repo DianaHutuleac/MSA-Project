@@ -1,12 +1,44 @@
-import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Profile({ navigation }) {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   const handleLogout = () => {
-    navigation.replace('Welcome');
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Welcome' }],
+    });
   };
 
+  useEffect(() => {
+    const openListener = navigation.addListener('drawerOpen', () => {
+      setIsDrawerOpen(true);
+    });
+
+    const closeListener = navigation.addListener('drawerClose', () => {
+      setIsDrawerOpen(false);
+    });
+
+    // Cleanup listeners on unmount
+    return () => {
+      openListener();
+      closeListener();
+    };
+  }, [navigation]);
+
   return (
+    <>
+    {!isDrawerOpen && ( // Only show button when drawer is closed
+      <TouchableOpacity
+        style={styles.menuButton}
+        onPress={() => navigation.openDrawer()}
+      >
+        <Ionicons name="menu" size={30} color="black" />
+      </TouchableOpacity>
+    )}
+
     <View style={styles.container}>
       <Text style={styles.title}>User Profile</Text>
       <View style={styles.infoContainer}>
@@ -16,6 +48,7 @@ export default function Profile({ navigation }) {
 
       <Button title="Log Out" onPress={handleLogout} />
     </View>
+    </>
   );
 }
 
@@ -46,5 +79,17 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 16,
     marginVertical: 5,
+  },
+  menuButton: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    zIndex: 1000,
+    backgroundColor: '#ffffff',
+    padding: 10,
+    borderRadius: 50,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
 });

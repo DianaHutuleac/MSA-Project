@@ -7,7 +7,10 @@ import {
   TouchableOpacity,
   Alert,
   Image,
-  ImageBackground
+  ImageBackground,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
 } from "react-native";
 
 export default function Register({ navigation }) {
@@ -28,50 +31,52 @@ export default function Register({ navigation }) {
 
   return (
     <ImageBackground
-      source={require('../assets/background_map.jpeg')} 
+      source={require("../assets/background_map.jpeg")}
       style={styles.background}
     >
       <View style={styles.overlay} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+        >
+          <Image source={require("../assets/logo.png")} style={styles.logo} />
 
-      <View style={styles.container}>
-        
-        <Image
-            source={require('../assets/logo.png')} 
-            style={styles.logo}
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
           />
-        
 
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+          />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry={true}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-        />
+          <TouchableOpacity style={styles.button} onPress={handleRegister}>
+            <Text style={styles.buttonText}>Register</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
-
-        <Text style={styles.footerText}>
-          Already have an account?{" "}
-          <Text
-            style={styles.link}
-            onPress={() => navigation.navigate("Login")}
-          >
-            Login here
+          <Text style={styles.footerText}>
+            Already have an account?{" "}
+            <Text
+              style={styles.link}
+              onPress={() => navigation.navigate("Login")}
+            >
+              Login here
+            </Text>
           </Text>
-        </Text>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
 }
@@ -79,17 +84,20 @@ export default function Register({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "center",
     padding: 20,
   },
   background: {
     flex: 1,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#FFFFF0',
+    backgroundColor: "#FFFFF0",
     opacity: 0.3,
   },
   input: {
@@ -105,21 +113,21 @@ const styles = StyleSheet.create({
     width: 300,
     height: 200,
     marginBottom: 25,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   button: {
-    backgroundColor: '#FFFFF0', 
+    backgroundColor: "#FFFFF0",
     borderWidth: 0.2,
     borderRadius: 100,
     padding: 15,
     marginVertical: 10,
-    width: '60%',
-    alignItems: 'center',
+    width: "60%",
+    alignItems: "center",
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
   },
   footerText: {
     marginTop: 20,
@@ -130,6 +138,6 @@ const styles = StyleSheet.create({
     color: "#010056",
     fontWeight: "bold",
     fontStyle: "italic",
-    textDecorationLine: "underline"
+    textDecorationLine: "underline",
   },
 });

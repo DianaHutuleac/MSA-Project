@@ -1,15 +1,48 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Image, Animated, ImageBackground, TouchableOpacity } from 'react-native';
 
 export default function Welcome({ navigation }) {
+  const scaleAnim = useRef(new Animated.Value(1)).current; // Initial scale value
+
+  useEffect(() => {
+    const animate = () => {
+      Animated.sequence([
+        Animated.timing(scaleAnim, {
+          toValue: 1.2, // Zoom in
+          duration: 4000, // Duration in milliseconds
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 1, // Zoom out
+          duration: 4000, // Duration in milliseconds
+          useNativeDriver: true,
+        }),
+      ]).start(() => animate()); // Loop animation
+    };
+
+    animate();
+  }, [scaleAnim]);
+
   return (
-    <ImageBackground
-      source={require('../assets/background_map.jpeg')} 
-      style={styles.background}
-    >
+    <View style={styles.container}>
+      {/* Animated Background */}
+      <Animated.View
+        style={[
+          StyleSheet.absoluteFill, // Ensures the background fills the entire screen
+          { transform: [{ scale: scaleAnim }] },
+        ]}
+      >
+        <ImageBackground
+          source={require('../assets/background_map.jpeg')}
+          style={styles.background}
+        />
+      </Animated.View>
+
+      {/* Overlay */}
       <View style={styles.overlay} />
 
-      <View style={styles.container}>
+      {/* Fixed Content */}
+      <View style={styles.content}>
         <Image
           source={require('../assets/logo.png')}
           style={styles.logo}
@@ -23,11 +56,14 @@ export default function Welcome({ navigation }) {
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
       </View>
-    </ImageBackground>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   background: {
     flex: 1,
     resizeMode: 'cover',
@@ -37,7 +73,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFF0',
     opacity: 0.3,
   },
-  container: {
+  content: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
