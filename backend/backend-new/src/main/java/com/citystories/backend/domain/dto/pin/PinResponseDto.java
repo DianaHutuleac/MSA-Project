@@ -16,4 +16,6 @@ public class PinResponseDto {
     private String story;
     private Long numberOfLikes;
     private LocalDateTime createdAt;
+    private Double latitude;
+    private Double longitude;
 }

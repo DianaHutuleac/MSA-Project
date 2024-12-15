@@ -36,6 +36,13 @@ public class Pin {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    // New fields for map functionality
+    @Column(nullable = false)
+    private Double latitude;
+
+    @Column(nullable = false)
+    private Double longitude;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -51,5 +58,4 @@ public class Pin {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserData user;
-
 }

@@ -1,10 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView from 'react-native-maps';
 import { Ionicons } from '@expo/vector-icons';
+import PinComponent from '../components/PinComponent';
 
 export default function Home({ navigation }) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  // Example marker data
+  const [markers, setMarkers] = useState([
+    {
+      id: 1,
+      coordinate: { latitude: 45.7519, longitude: 21.2234 },
+      story: 'User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1User Story 1',
+    },
+    {
+      id: 2,
+      coordinate: { latitude: 45.7525, longitude: 21.2300 },
+      story: 'User Story 2',
+    },
+  ]);
 
   useEffect(() => {
     const openListener = navigation.addListener('drawerOpen', () => {
@@ -15,7 +30,6 @@ export default function Home({ navigation }) {
       setIsDrawerOpen(false);
     });
 
-    // Cleanup listeners on unmount
     return () => {
       openListener();
       closeListener();
@@ -23,43 +37,38 @@ export default function Home({ navigation }) {
   }, [navigation]);
 
   return (
-    <View style={styles.container}>
-      {!isDrawerOpen && ( // Only show button when drawer is closed
-        <TouchableOpacity
-          style={styles.menuButton}
-          onPress={() => navigation.openDrawer()}
-        >
-          <Ionicons name="menu" size={30} color="black" />
-        </TouchableOpacity>
-      )}
+      <View style={styles.container}>
+        {!isDrawerOpen && (
+            <TouchableOpacity
+                style={styles.menuButton}
+                onPress={() => navigation.openDrawer()}
+            >
+              <Ionicons name="menu" size={30} color="black" />
+            </TouchableOpacity>
+        )}
 
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: 45.7489,
-          longitude: 21.2087,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
-        }}
-        showsUserLocation={true}
-        zoomEnabled={true}
-        scrollEnabled={true}
-        showsCompass={true}
-      >
-        <Marker
-          coordinate={{ latitude: 45.7519, longitude: 21.2234 }}
-          pinColor="gold"
-          title="Pin of the Week"
-          description="This is the most liked story of the week!"
-        />
-        <Marker
-          coordinate={{ latitude: 45.7530, longitude: 21.2105 }}
-          pinColor="red"
-          title="Challenge"
-          description="Participate in the current challenge here!"
-        />
-      </MapView>
-    </View>
+        <MapView
+            style={styles.map}
+            initialRegion={{
+              latitude: 45.7489,
+              longitude: 21.2087,
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.05,
+            }}
+            showsUserLocation={true}
+            zoomEnabled={true}
+            scrollEnabled={true}
+            showsCompass={true}
+        >
+          {markers.map((marker) => (
+              <PinComponent
+                  key={marker.id}
+                  coordinate={marker.coordinate}
+                  story={marker.story}
+              />
+          ))}
+        </MapView>
+      </View>
   );
 }
 

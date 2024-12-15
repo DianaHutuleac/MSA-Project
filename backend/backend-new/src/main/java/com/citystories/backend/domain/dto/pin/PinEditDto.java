@@ -14,4 +14,6 @@ public class PinEditDto {
     private Long id;
     private String story;
     private VisibilityDuration visibilityDuration; // the enum field
+    private Double latitude;
+    private Double longitude;
 }
