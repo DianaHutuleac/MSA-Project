@@ -12,13 +12,13 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
-import axios from "axios"; // 1) Import axios
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Register({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // 2) Use async/await to make the POST request
   const handleRegister = async () => {
     if (!email || !password) {
       Alert.alert("Error", "Please fill in both fields.");
@@ -26,18 +26,25 @@ export default function Register({ navigation }) {
     }
 
     try {
-      // 3) Make a POST request to your backend
+      // 1) Call the new /auth/register endpoint
       const response = await axios.post(
-        "http://localhost:8080/user/register",
-        {
-          email: email,
-          password: password,
-        }
+          "http://localhost:8080/auth/register",
+          {
+            email,
+            password,
+          }
       );
-      // The server should return a UserGetDto in response.data (e.g. { id, email, ... })
-      console.log("Register success:", response.data);
 
-      // Navigate to the next screen — or show a success message
+      // 2) The response should contain { token, user: { ... } }
+      const data = response.data;
+      console.log("Register success:", data);
+
+      // 3) If you want to automatically log them in:
+      if (data && data.token) {
+        await AsyncStorage.setItem("authToken", data.token);
+      }
+
+      // 4) Navigate to the main screen or some other screen
       navigation.replace("DrawerNavigator");
     } catch (error) {
       console.error("Register error:", error);
@@ -46,54 +53,54 @@ export default function Register({ navigation }) {
   };
 
   return (
-    <ImageBackground
-      source={require("../assets/background_map.jpeg")}
-      style={styles.background}
-    >
-      <View style={styles.overlay} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
+      <ImageBackground
+          source={require("../assets/background_map.jpeg")}
+          style={styles.background}
       >
-        <ScrollView
-          contentContainerStyle={styles.scrollContainer}
-          keyboardShouldPersistTaps="handled"
+        <View style={styles.overlay} />
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.container}
         >
-          <Image source={require("../assets/logo.png")} style={styles.logo} />
+          <ScrollView
+              contentContainerStyle={styles.scrollContainer}
+              keyboardShouldPersistTaps="handled"
+          >
+            <Image source={require("../assets/logo.png")} style={styles.logo} />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
+            <TextInput
+                style={styles.input}
+                placeholder="Email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={email}
+                onChangeText={setEmail}
+            />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry={true}
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-          />
+            <TextInput
+                style={styles.input}
+                placeholder="Password"
+                secureTextEntry={true}
+                value={password}
+                onChangeText={setPassword}
+            />
 
-          <TouchableOpacity style={styles.button} onPress={handleRegister}>
-            <Text style={styles.buttonText}>Register</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleRegister}>
+              <Text style={styles.buttonText}>Register</Text>
+            </TouchableOpacity>
 
-          <Text style={styles.footerText}>
-            Already have an account?{" "}
-            <Text
-              style={styles.link}
-              onPress={() => navigation.navigate("Login")}
-            >
-              Login here
+            <Text style={styles.footerText}>
+              Already have an account?{" "}
+              <Text
+                  style={styles.link}
+                  onPress={() => navigation.navigate("Login")}
+              >
+                Login here
+              </Text>
             </Text>
-          </Text>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </ImageBackground>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </ImageBackground>
   );
 }
 

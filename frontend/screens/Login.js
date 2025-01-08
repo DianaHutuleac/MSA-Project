@@ -12,36 +12,34 @@ import {
   ScrollView,
 } from "react-native";
 import axios from "axios";
-// 1. Import AsyncStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // 2. Update handleLogin
   const handleLogin = async () => {
     if (email && password) {
       try {
+        // 1) Call the new /auth/login endpoint
         const response = await axios.post(
-          "http://<YOUR_IP_OR_DOMAIN>:8080/user/login",
-          {
-            email: email,
-            password: password,
-          }
+            "http://localhost:8080/auth/login",
+            {
+              email,
+              password,
+            }
         );
 
-        const data = response.data;  // e.g. { token: "....", ... }
+        // 2) The response should contain { token, user: { ... } }
+        const data = response.data;
+        // e.g. data = { token: "...", user: { id: ..., email: ... } }
 
-        // Extract the token from the data (assuming your backend returns it as "token")
-        const { token } = data;
-
-        // Store token in AsyncStorage
-        if (token) {
-          await AsyncStorage.setItem("authToken", token);
+        // 3) Store token in AsyncStorage
+        if (data && data.token) {
+          await AsyncStorage.setItem("authToken", data.token);
         }
 
-        // Navigate to the next screen
+        // 4) Navigate to next screen
         navigation.replace("DrawerNavigator");
       } catch (error) {
         console.error(error);
@@ -53,51 +51,51 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <ImageBackground
-      source={require("../assets/background_map.jpeg")}
-      style={styles.background}
-    >
-      <View style={styles.overlay} />
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      <ImageBackground
+          source={require("../assets/background_map.jpeg")}
+          style={styles.background}
       >
-        <ScrollView contentContainerStyle={styles.container}>
-          <Image source={require("../assets/logo.png")} style={styles.logo} />
+        <View style={styles.overlay} />
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <ScrollView contentContainerStyle={styles.container}>
+            <Image source={require("../assets/logo.png")} style={styles.logo} />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-          />
+            <TextInput
+                style={styles.input}
+                placeholder="Email"
+                keyboardType="email-address"
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+            />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry={true}
-            value={password}
-            onChangeText={setPassword}
-          />
+            <TextInput
+                style={styles.input}
+                placeholder="Password"
+                secureTextEntry={true}
+                value={password}
+                onChangeText={setPassword}
+            />
 
-          <TouchableOpacity style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
 
-          <Text style={styles.footerText}>
-            Don't have an account?{" "}
-            <Text
-              style={styles.link}
-              onPress={() => navigation.navigate("Register")}
-            >
-              Register here
+            <Text style={styles.footerText}>
+              Don't have an account?{" "}
+              <Text
+                  style={styles.link}
+                  onPress={() => navigation.navigate("Register")}
+              >
+                Register here
+              </Text>
             </Text>
-          </Text>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </ImageBackground>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </ImageBackground>
   );
 }
 
