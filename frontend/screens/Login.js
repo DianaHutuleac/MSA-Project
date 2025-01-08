@@ -11,14 +11,42 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
+import axios from "axios";
+// 1. Import AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
+  // 2. Update handleLogin
+  const handleLogin = async () => {
     if (email && password) {
-      navigation.replace("DrawerNavigator");
+      try {
+        const response = await axios.post(
+          "http://<YOUR_IP_OR_DOMAIN>:8080/user/login",
+          {
+            email: email,
+            password: password,
+          }
+        );
+
+        const data = response.data;  // e.g. { token: "....", ... }
+
+        // Extract the token from the data (assuming your backend returns it as "token")
+        const { token } = data;
+
+        // Store token in AsyncStorage
+        if (token) {
+          await AsyncStorage.setItem("authToken", token);
+        }
+
+        // Navigate to the next screen
+        navigation.replace("DrawerNavigator");
+      } catch (error) {
+        console.error(error);
+        alert("Login failed");
+      }
     } else {
       alert("Please fill in all fields");
     }
@@ -35,10 +63,7 @@ export default function Login({ navigation }) {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView contentContainerStyle={styles.container}>
-          <Image
-            source={require("../assets/logo.png")}
-            style={styles.logo}
-          />
+          <Image source={require("../assets/logo.png")} style={styles.logo} />
 
           <TextInput
             style={styles.input}

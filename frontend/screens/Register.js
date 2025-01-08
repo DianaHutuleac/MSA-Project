@@ -12,21 +12,37 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
+import axios from "axios"; // 1) Import axios
 
 export default function Register({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleRegister = () => {
+  // 2) Use async/await to make the POST request
+  const handleRegister = async () => {
     if (!email || !password) {
       Alert.alert("Error", "Please fill in both fields.");
       return;
     }
 
-    console.log("Email:", email);
-    console.log("Password:", password);
+    try {
+      // 3) Make a POST request to your backend
+      const response = await axios.post(
+        "http://localhost:8080/user/register",
+        {
+          email: email,
+          password: password,
+        }
+      );
+      // The server should return a UserGetDto in response.data (e.g. { id, email, ... })
+      console.log("Register success:", response.data);
 
-    navigation.replace("DrawerNavigator");
+      // Navigate to the next screen — or show a success message
+      navigation.replace("DrawerNavigator");
+    } catch (error) {
+      console.error("Register error:", error);
+      Alert.alert("Error", "Something went wrong during registration");
+    }
   };
 
   return (
@@ -107,7 +123,6 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: "#000",
     borderRadius: 5,
-    backgroundColor: "#",
   },
   logo: {
     width: 300,
