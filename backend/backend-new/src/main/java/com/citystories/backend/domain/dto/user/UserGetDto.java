@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class UserGetDto {
     private Long id;
     private String email;
+    private String role;
 }

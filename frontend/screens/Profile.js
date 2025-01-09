@@ -1,16 +1,15 @@
+// file: screens/Profile.js
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, Button, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
+import DropdownMenu from "../components/DropdownMenu";
 
 export default function Profile({ navigation }) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [userInfo, setUserInfo] = useState({ email: "", role: "" });
 
   const handleLogout = async () => {
-    // 1) Remove the token from AsyncStorage
     await AsyncStorage.removeItem("authToken");
-
-    // 2) Reset navigation stack (go to Welcome or Login screen)
     navigation.reset({
       index: 0,
       routes: [{ name: "Welcome" }],
@@ -18,55 +17,47 @@ export default function Profile({ navigation }) {
   };
 
   useEffect(() => {
-    const openListener = navigation.addListener("drawerOpen", () => {
-      setIsDrawerOpen(true);
-    });
-
-    const closeListener = navigation.addListener("drawerClose", () => {
-      setIsDrawerOpen(false);
-    });
-
-    return () => {
-      openListener();
-      closeListener();
+    const fetchUserInfoFromToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+        if (token) {
+          const decoded = jwtDecode(token);
+          setUserInfo({
+            email: decoded.email || "",
+          });
+        }
+      } catch (err) {
+        console.log("Error decoding token:", err);
+      }
     };
-  }, [navigation]);
+    fetchUserInfoFromToken();
+  }, []);
 
   return (
-      <>
-        {!isDrawerOpen && (
-            <TouchableOpacity
-                style={styles.menuButton}
-                onPress={() => navigation.openDrawer()}
-            >
-              <Ionicons name="menu" size={30} color="black" />
-            </TouchableOpacity>
-        )}
+      <View style={styles.container}>
+        {/* The same dropdown menu for quick nav */}
+        <DropdownMenu navigation={navigation} />
 
-        <View style={styles.container}>
-          <Text style={styles.title}>User Profile</Text>
-          <View style={styles.infoContainer}>
-            <Text style={styles.infoText}>Name: test</Text>
-            <Text style={styles.infoText}>Email: test@test.com</Text>
-          </View>
-
-          <Button title="Log Out" onPress={handleLogout} />
+        <Text style={styles.title}>User Profile</Text>
+        <View style={styles.infoContainer}>
+          <Text style={styles.infoText}>Email: {userInfo.email}</Text>
         </View>
-      </>
+        <Button title="Log Out" onPress={handleLogout} />
+      </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     padding: 20,
     backgroundColor: "#f9f9f9",
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
+    marginTop: 80,
     marginBottom: 20,
   },
   infoContainer: {
@@ -83,17 +74,5 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 16,
     marginVertical: 5,
-  },
-  menuButton: {
-    position: "absolute",
-    top: 50,
-    left: 20,
-    zIndex: 1000,
-    backgroundColor: "#ffffff",
-    padding: 10,
-    borderRadius: 50,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
   },
 });

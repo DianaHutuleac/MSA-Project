@@ -23,7 +23,7 @@ export default function Login({ navigation }) {
       try {
         // 1) Call the new /auth/login endpoint
         const response = await axios.post(
-            "http://localhost:8080/auth/login",
+            "http://10.0.2.2:8080/auth/login",
             {
               email,
               password,

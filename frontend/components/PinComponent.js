@@ -1,29 +1,28 @@
+// file: components/PinComponent.js
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Marker, Callout } from 'react-native-maps';
+import { View, Text, StyleSheet } from 'react-native';
 
-const PinComponent = ({ coordinate, story }) => {
+export default function PinComponent({ coordinate, story }) {
     return (
-        <Marker
-            coordinate={coordinate}
-            pinColor="#F26CA7"
-            title={"Story Pin"}
-            description={story}
-        />
+        <Marker coordinate={coordinate} pinColor="#F26CA7">
+            {/* The custom callout bubble */}
+            <Callout tooltip={false}>
+                <View style={styles.calloutContainer}>
+                    <Text style={styles.storyText}>{story}</Text>
+                </View>
+            </Callout>
+        </Marker>
     );
-};
+}
 
 const styles = StyleSheet.create({
     calloutContainer: {
         maxWidth: 250,
-        height: 'auto',
         backgroundColor: '#fff',
         borderRadius: 8,
         padding: 10,
         elevation: 5,
-    },
-    scrollView: {
-        flex: 1,
     },
     storyText: {
         fontSize: 14,
@@ -31,5 +30,3 @@ const styles = StyleSheet.create({
         lineHeight: 20,
     },
 });
-
-export default PinComponent;
