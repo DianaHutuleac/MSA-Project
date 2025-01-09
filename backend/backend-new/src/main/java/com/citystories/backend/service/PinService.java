@@ -14,5 +14,6 @@ public interface PinService {
     PinResponseDto updatePin(Long id, PinEditDto pinEditDto);
     void deletePin(Long id);
     void deleteExpiredPins();
+    PinResponseDto addLikeToPin(Long id);
     PinResponseDto getPinByUserId(Long userId);
 }

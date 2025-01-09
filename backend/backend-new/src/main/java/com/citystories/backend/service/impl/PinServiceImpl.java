@@ -13,6 +13,7 @@ import com.citystories.backend.repository.PinRepository;
 import com.citystories.backend.repository.UserDataRepository;
 import com.citystories.backend.service.PinService;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -55,11 +56,22 @@ public class PinServiceImpl implements PinService {
 
     @Override
     public PinResponseDto createPin(PinCreateDto pinCreateDto) {
+        // Extract authenticated user ID from the SecurityContext
+        String authenticatedUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (authenticatedUserId == null) {
+            throw new UserNotFoundException("User ID is not available in the SecurityContext.");
+        }
+
+        // Set the userId in the DTO
+        pinCreateDto.setUserId(Long.parseLong(authenticatedUserId));
+
+        // Proceed with creating the pin
         UserData user = findUserById(pinCreateDto.getUserId());
         Pin pin = mapCreatePinDtoToPin(pinCreateDto, user);
         Pin createdPin = pinRepository.save(pin);
         return mapToResponseDto(createdPin);
     }
+
 
     @Override
     public PinResponseDto updatePin(Long id, PinEditDto pinEditDto) {
@@ -80,6 +92,14 @@ public class PinServiceImpl implements PinService {
     public void deleteExpiredPins() {
         LocalDateTime now = LocalDateTime.now();
         pinRepository.deleteByExpiresAtBeforeAndExpiresAtIsNotNull(now);
+    }
+
+    @Override
+    public PinResponseDto addLikeToPin(Long pinId) {
+        Pin pin = findPinById(pinId);
+        pin.setNumberOfLikes(pin.getNumberOfLikes() + 1);
+        Pin savedPin = pinRepository.save(pin);
+        return mapToResponseDto(savedPin);
     }
 
     private Pin findPinById(Long pinId) {
