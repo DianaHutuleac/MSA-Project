@@ -17,6 +17,5 @@ public interface PinMapper {
     Pin pinCreateDtoToPin(PinCreateDto pinCreateDto);
 
     Pin pinEditDtoToPin(PinEditDto pinEditDto);
-
     PinResponseDto pinToPinGetDto(Pin pin);
 }

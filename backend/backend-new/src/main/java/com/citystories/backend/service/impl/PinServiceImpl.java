@@ -12,6 +12,7 @@ import com.citystories.backend.mapper.PinMapper;
 import com.citystories.backend.repository.PinRepository;
 import com.citystories.backend.repository.UserDataRepository;
 import com.citystories.backend.service.PinService;
+import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -94,10 +95,20 @@ public class PinServiceImpl implements PinService {
         pinRepository.deleteByExpiresAtBeforeAndExpiresAtIsNotNull(now);
     }
 
+    @Transactional
     @Override
     public PinResponseDto addLikeToPin(Long pinId) {
         Pin pin = findPinById(pinId);
         pin.setNumberOfLikes(pin.getNumberOfLikes() + 1);
+        Pin savedPin = pinRepository.save(pin);
+        return mapToResponseDto(savedPin);
+    }
+
+    @Transactional
+    @Override
+    public PinResponseDto removeLikeFromPin(Long pinId) {
+        Pin pin = findPinById(pinId);
+        pin.setNumberOfLikes(pin.getNumberOfLikes() - 1);
         Pin savedPin = pinRepository.save(pin);
         return mapToResponseDto(savedPin);
     }

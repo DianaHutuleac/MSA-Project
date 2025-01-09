@@ -1,50 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropdownMenu from '../components/DropdownMenu';
 import AddPinButton from '../components/AddPinButton';
 import MapWithMarkers from '../components/MapWithMarkers';
 import StoryModal from '../components/StoryModal';
-import { jwtDecode } from 'jwt-decode';
+import { AuthContext } from '../context/AuthContext';
 
 export default function Home({ navigation }) {
+    const { token, userId } = useContext(AuthContext);
     const [markers, setMarkers] = useState([]);
     const [addPinMode, setAddPinMode] = useState(false);
     const [newPinCoordinate, setNewPinCoordinate] = useState(null);
     const [storyModalVisible, setStoryModalVisible] = useState(false);
     const [storyText, setStoryText] = useState('');
     const [visibilityDuration, setVisibilityDuration] = useState('PERMANENT');
-    const [userId, setUserId] = useState(null);
-    const [token, setToken] = useState(null);
 
-    // Fetch token and pins on mount
+    // Fetch pins when the token changes
     useEffect(() => {
-        const loadTokenAndPins = async () => {
-            try {
-                const storedToken = await AsyncStorage.getItem('authToken');
-                if (storedToken) {
-                    setToken(storedToken);
-                    const decoded = jwtDecode(storedToken);
-                    console.log(decoded);
-                    setUserId(decoded.userId);
-                    fetchAllPins(storedToken);
-                } else {
-                    console.log('No JWT token found');
-                }
-            } catch (error) {
-                console.log('Error loading token:', error);
-            }
-        };
-        loadTokenAndPins();
-    }, []);
+        if (token) {
+            fetchAllPins(token);
+        }
+    }, [token]);
 
     const fetchAllPins = async (jwtToken) => {
         try {
             const response = await axios.get('http://localhost:8080/pins', {
                 headers: { Authorization: `Bearer ${jwtToken}` },
             });
-            setMarkers(response.data);
+            setMarkers(response.data); // Update the markers state with pins from backend
         } catch (error) {
             console.error('Error fetching pins:', error);
             Alert.alert('Error', 'Could not load pins.');
@@ -109,10 +93,7 @@ export default function Home({ navigation }) {
         <View style={styles.container}>
             <DropdownMenu navigation={navigation} />
             <AddPinButton onPress={handleAddPinPress} />
-            <MapWithMarkers
-                markers={markers}
-                onMapPress={handleMapPress}
-            />
+            <MapWithMarkers markers={markers} onMapPress={handleMapPress} />
             <StoryModal
                 visible={storyModalVisible}
                 storyText={storyText}

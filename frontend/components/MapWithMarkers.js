@@ -2,7 +2,7 @@ import React from 'react';
 import MapView from 'react-native-maps';
 import PinComponent from './PinComponent';
 
-export default function MapWithMarkers({ markers, addPinMode, onMapPress }) {
+export default function MapWithMarkers({ markers, onMapPress }) {
     return (
         <MapView
             style={{ flex: 1 }}
@@ -19,7 +19,8 @@ export default function MapWithMarkers({ markers, addPinMode, onMapPress }) {
                     key={pin.id}
                     coordinate={{ latitude: pin.latitude, longitude: pin.longitude }}
                     story={pin.story}
-                    likes={pin.numberOfLikes}
+                    likes={pin.numberOfLikes} // Pass the number of likes here
+                    pinId={pin.id} // Ensure PinComponent has the pinId
                 />
             ))}
         </MapView>

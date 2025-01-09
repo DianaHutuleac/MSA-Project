@@ -22,7 +22,6 @@ public class Pin {
 
     @Column(length = 5000)
     private String story;
-
     private Integer numberOfLikes;
 
     @OneToMany(mappedBy = "pin", cascade = CascadeType.ALL, orphanRemoval = true)

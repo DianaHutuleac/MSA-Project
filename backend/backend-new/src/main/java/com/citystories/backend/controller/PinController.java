@@ -49,6 +49,16 @@ public class PinController {
         return ResponseEntity.status(HttpStatus.OK).body(pinService.updatePin(pinId, pinEditDto));
     }
 
+    @PutMapping("/{pinId}/like")
+    public ResponseEntity<PinResponseDto> addLikeToPin(@PathVariable Long pinId) {
+        return ResponseEntity.status(HttpStatus.OK).body(pinService.addLikeToPin(pinId));
+    }
+
+    @PutMapping("/{pinId}/unlike")
+    public ResponseEntity<PinResponseDto> removeLikeFromPin(@PathVariable Long pinId) {
+        return ResponseEntity.status(HttpStatus.OK).body(pinService.removeLikeFromPin(pinId));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePin(@PathVariable Long id) {
         pinService.deletePin(id);
