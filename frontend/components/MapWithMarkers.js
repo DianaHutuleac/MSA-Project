@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { StyleSheet, Modal, View, Text, TouchableOpacity, TextInput, Button } from 'react-native';
+import { StyleSheet, Modal, View, Text, TouchableOpacity, TextInput, Button, ScrollView } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
@@ -201,10 +201,29 @@ export default function MapWithMarkers({ markers, onMapPress }) {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
-            {selectedPin && (
+            {selectedPin && (  
               <>
-                <Text style={styles.modalStoryText}>{selectedPin.story}</Text>
-                <View style={styles.likeRow}>
+              <TouchableOpacity
+              style={styles.closeIcon}
+              onPress={() => setModalVisible(false)}
+              >
+                <Ionicons name="close" size={24} color="#333" />
+              </TouchableOpacity>
+              <Text style={styles.commentTitle}>Story</Text>
+              <ScrollView style={styles.storyScrollView}>
+                <Text style={styles.modalStoryText}>{selectedPin.story}</Text> 
+              </ScrollView>
+
+                <View style={styles.commentSection}>
+              <Text style={styles.commentTitle}>Comments</Text>
+              <ScrollView style={styles.commentList}>
+                {/* Simulated Comments */}
+                <Text style={styles.commentItem}>User1: This is an amazing place!</Text>
+                </ScrollView>
+              </View>
+
+
+                <View style={styles.interactRow}>
                   <TouchableOpacity onPress={handleLikePress} style={styles.likeButton}>
                     <Ionicons
                       name={isLiked ? 'heart' : 'heart-outline'}
@@ -213,16 +232,17 @@ export default function MapWithMarkers({ markers, onMapPress }) {
                     />
                     <Text style={styles.likeText}>{likeCount}</Text>
                   </TouchableOpacity>
-                </View>
-                <TextInput
-                  style={styles.commentInput}
-                  placeholder="Write a comment..."
-                  value={commentText}
-                  onChangeText={setCommentText}
-                />
-                <Button title="Send" onPress={handleSendComment} />
-                <Button title="Close" onPress={() => setModalVisible(false)} />
-              </>
+                    <TextInput
+                    style={styles.commentInput}
+                    placeholder="Write a comment..."
+                    value={commentText}
+                    onChangeText={setCommentText}
+                  />
+                  <TouchableOpacity onPress={handleSendComment} style={styles.sendIcon}>
+                    <Ionicons name="send" size={24} color="#333" />
+                  </TouchableOpacity>                
+            </View>
+                 </>
             )}
           </View>
         </View>
@@ -244,17 +264,37 @@ const styles = StyleSheet.create({
   modalContainer: {
     width: '85%',
     backgroundColor: '#fff',
+    height: '50%',
     borderRadius: 10,
     padding: 20,
   },
+  storyScrollView: {
+    maxHeight: 200, // Adjust height to fit the modal
+    backgroundColor: '#f9f9f9', // Light background for contrast
+    borderRadius: 12, // Rounded corners
+    padding: 15, // Space inside the box
+    shadowColor: '#000', // Subtle shadow
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2, // For Android shadow
+  },
   modalStoryText: {
     fontSize: 16,
-    marginBottom: 15,
+    lineHeight: 24, // Increase line spacing for better readability
+    color: '#333', // Dark gray for the text
+    fontFamily: 'System', // You can change this to a custom font if desired
+  },  
+  closeIcon: {
+    position: 'absolute',
+    top: 1,
+    right: 1,
+    zIndex: 1,
   },
-  likeRow: {
+  interactRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
+    gap: 10
   },
   likeButton: {
     flexDirection: 'row',
@@ -265,11 +305,63 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
+  
+  commentSection: {
+    marginBottom: 15,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    paddingTop: 10,
+  },
+  commentTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#444',
+    textAlign: 'center', // Center the title
+  },
   commentInput: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
     padding: 10,
+    flex: 1,
+    minHeight: 50, // Increased minimum height
+    maxHeight: 120, // Slightly higher maximum height
+    multiline: true,
+    textAlignVertical: 'top',
+    backgroundColor: '#f9f9f9', // Matches the aesthetic of the story and comment sections
+  },
+  commentList: {
+    maxHeight: 100, // Limit height to avoid overflowing
+    marginBottom: 15,
+    borderRadius: 12,
+    backgroundColor: '#f5f5f5',
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  commentItem: {
+    fontSize: 15,
+    lineHeight: 22,
+    color: '#555',
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 10, // Spacing between comments
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  
+  commentItem: {
+    fontSize: 15,
+    color: '#555',
     marginBottom: 10,
   },
 });
+
