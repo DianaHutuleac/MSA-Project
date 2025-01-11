@@ -3,6 +3,7 @@ package com.citystories.backend.service.impl;
 
 import com.citystories.backend.domain.dto.pin.PinCreateDto;
 import com.citystories.backend.domain.dto.pin.PinEditDto;
+import com.citystories.backend.domain.dto.pin.PinLikeCountAndIsLikedResponseDto;
 import com.citystories.backend.domain.dto.pin.PinResponseDto;
 import com.citystories.backend.domain.entity.Pin;
 import com.citystories.backend.domain.entity.UserData;
@@ -85,6 +86,10 @@ public class PinServiceImpl implements PinService {
     @Override
     public void deletePin(Long id) {
         Pin pin = findPinById(id);
+
+        pin.getLikedBy().forEach(user -> user.getLikedPins().remove(pin));
+        pin.getLikedBy().clear();
+
         pinRepository.delete(pin);
     }
 
@@ -92,25 +97,90 @@ public class PinServiceImpl implements PinService {
     @Override
     public void deleteExpiredPins() {
         LocalDateTime now = LocalDateTime.now();
-        pinRepository.deleteByExpiresAtBeforeAndExpiresAtIsNotNull(now);
+
+        // Find all expired pins
+        List<Pin> expiredPins = pinRepository.findByExpiresAtBeforeAndExpiresAtIsNotNull(now);
+
+        // Clear relationships for each expired pin
+        expiredPins.forEach(pin -> {
+            pin.getLikedBy().forEach(user -> user.getLikedPins().remove(pin));
+            pin.getLikedBy().clear();
+        });
+
+        // Delete expired pins
+        pinRepository.deleteAll(expiredPins);
     }
 
     @Transactional
     @Override
     public PinResponseDto addLikeToPin(Long pinId) {
+        // Extract authenticated user ID from the SecurityContext
+        String authenticatedUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (authenticatedUserId == null) {
+            throw new UserNotFoundException("User ID is not available in the SecurityContext.");
+        }
+
+        Long userId = Long.parseLong(authenticatedUserId);
+        UserData user = findUserById(userId);
         Pin pin = findPinById(pinId);
-        pin.setNumberOfLikes(pin.getNumberOfLikes() + 1);
-        Pin savedPin = pinRepository.save(pin);
-        return mapToResponseDto(savedPin);
+
+        if (!pin.getLikedBy().contains(user)) {
+            pin.getLikedBy().add(user);
+            user.getLikedPins().add(pin);
+            pin.setNumberOfLikes(pin.getNumberOfLikes() + 1);
+            pinRepository.save(pin);
+            userDataRepository.save(user);
+        }
+
+        return mapToResponseDto(pin);
     }
+
 
     @Transactional
     @Override
     public PinResponseDto removeLikeFromPin(Long pinId) {
+        // Extract authenticated user ID from the SecurityContext
+        String authenticatedUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (authenticatedUserId == null) {
+            throw new UserNotFoundException("User ID is not available in the SecurityContext.");
+        }
+
+        Long userId = Long.parseLong(authenticatedUserId);
+        UserData user = findUserById(userId);
         Pin pin = findPinById(pinId);
-        pin.setNumberOfLikes(pin.getNumberOfLikes() - 1);
-        Pin savedPin = pinRepository.save(pin);
-        return mapToResponseDto(savedPin);
+
+        if (pin.getLikedBy().contains(user)) {
+            pin.getLikedBy().remove(user);
+            user.getLikedPins().remove(pin);
+            pin.setNumberOfLikes(pin.getNumberOfLikes() - 1);
+            pinRepository.save(pin);
+            userDataRepository.save(user);
+        }
+
+        return mapToResponseDto(pin);
+    }
+
+    @Override
+    public PinLikeCountAndIsLikedResponseDto getPinLikeCountAndIsLiked(Long pinId) {
+        // Extract authenticated user ID from the SecurityContext
+        String authenticatedUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("Authenticated User ID: " + authenticatedUserId); // Debug log
+        if (authenticatedUserId == null) {
+            throw new UserNotFoundException("User ID is not available in the SecurityContext.");
+        }
+
+        Long userId = Long.parseLong(authenticatedUserId);
+        UserData user = findUserById(userId);
+        Pin pin = findPinById(pinId);
+
+        boolean liked = pin.getLikedBy().contains(user);
+        System.out.println("User " + userId + " liked pin " + pinId + ": " + liked); // Debug log
+//        System.out.println(pin.getLikedBy()); // Debug log
+
+        return PinLikeCountAndIsLikedResponseDto.builder()
+                .liked(liked)
+                .numberOfLikes((long) pin.getNumberOfLikes())
+                .build();
     }
 
     private Pin findPinById(Long pinId) {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -13,11 +13,12 @@ import {
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const {setToken} = useContext(AuthContext);
   const handleLogin = async () => {
     if (email && password) {
       try {
@@ -37,6 +38,7 @@ export default function Login({ navigation }) {
         // 3) Store token in AsyncStorage
         if (data && data.token) {
           await AsyncStorage.setItem("authToken", data.token);
+          setToken(data.token); // Update context immediately
         }
 
         // 4) Navigate to next screen

@@ -2,6 +2,7 @@ package com.citystories.backend.controller;
 
 import com.citystories.backend.domain.dto.pin.PinCreateDto;
 import com.citystories.backend.domain.dto.pin.PinEditDto;
+import com.citystories.backend.domain.dto.pin.PinLikeCountAndIsLikedResponseDto;
 import com.citystories.backend.domain.dto.pin.PinResponseDto;
 import com.citystories.backend.service.PinService;
 import org.springframework.http.HttpStatus;
@@ -64,4 +65,11 @@ public class PinController {
         pinService.deletePin(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted pin with id: " + id);
     }
+
+    @GetMapping("/{pinId}/like-info")
+    public ResponseEntity<PinLikeCountAndIsLikedResponseDto> getPinLikeCountAndIsLiked(@PathVariable Long pinId) {
+        PinLikeCountAndIsLikedResponseDto response = pinService.getPinLikeCountAndIsLiked(pinId);
+        return ResponseEntity.ok(response);
+    }
+
 }

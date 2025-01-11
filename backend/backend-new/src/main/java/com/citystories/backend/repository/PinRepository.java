@@ -12,4 +12,5 @@ public interface PinRepository extends JpaRepository<Pin, Long> {
     void deleteByExpiresAtBeforeAndExpiresAtIsNotNull(LocalDateTime now);
     Optional<Pin> getPinByUserId(Long userId);
     List<Pin> getAllPinsByUserId(Long userId);
+    List<Pin> findByExpiresAtBeforeAndExpiresAtIsNotNull(LocalDateTime now);
 }

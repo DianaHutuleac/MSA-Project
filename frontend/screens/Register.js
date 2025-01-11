@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -14,10 +14,12 @@ import {
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Register({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const {setToken} = useContext(AuthContext);
 
   const handleRegister = async () => {
     if (!email || !password) {
@@ -42,6 +44,7 @@ export default function Register({ navigation }) {
       // 3) If you want to automatically log them in:
       if (data && data.token) {
         await AsyncStorage.setItem("authToken", data.token);
+        setToken(data.token); // Update context immediately
       }
 
       // 4) Navigate to the main screen or some other screen

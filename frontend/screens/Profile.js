@@ -1,20 +1,13 @@
-// file: screens/Profile.js
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
+import { AuthContext } from "../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import DropdownMenu from "../components/DropdownMenu";
 
 export default function Profile({ navigation }) {
+  const { logout } = useContext(AuthContext); // Access logout from AuthContext
   const [userInfo, setUserInfo] = useState({ email: "", role: "" });
-
-  const handleLogout = async () => {
-    await AsyncStorage.removeItem("authToken");
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Welcome" }],
-    });
-  };
 
   useEffect(() => {
     const fetchUserInfoFromToken = async () => {
@@ -34,16 +27,23 @@ export default function Profile({ navigation }) {
   }, []);
 
   return (
-      <View style={styles.container}>
-        {/* The same dropdown menu for quick nav */}
-        <DropdownMenu navigation={navigation} />
-
-        <Text style={styles.title}>User Profile</Text>
-        <View style={styles.infoContainer}>
-          <Text style={styles.infoText}>Email: {userInfo.email}</Text>
-        </View>
-        <Button title="Log Out" onPress={handleLogout} />
+    <View style={styles.container}>
+      <DropdownMenu navigation={navigation} />
+      <Text style={styles.title}>User Profile</Text>
+      <View style={styles.infoContainer}>
+        <Text style={styles.infoText}>Email: {userInfo.email}</Text>
       </View>
+      <Button
+        title="Log Out"
+        onPress={() => {
+          logout(); // Clear context and AsyncStorage
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Welcome" }],
+          });
+        }}
+      />
+    </View>
   );
 }
 

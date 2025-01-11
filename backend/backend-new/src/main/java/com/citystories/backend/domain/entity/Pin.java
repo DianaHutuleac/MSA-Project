@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -57,4 +58,8 @@ public class Pin {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserData user;
+
+    @ManyToMany(mappedBy = "likedPins")
+    private List<UserData> likedBy = new ArrayList<>(); // Initialize here
+
 }
