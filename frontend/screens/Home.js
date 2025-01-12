@@ -27,7 +27,7 @@ export default function Home({ navigation }) {
   const fetchAllPins = async (jwtToken) => {
     console.log("Fetching pins with token:", jwtToken); // Debug log
     try {
-      const response = await axios.get("http://localhost:8080/pins", {
+      const response = await axios.get("http://10.0.2.2:8080/pins", {
         headers: { Authorization: `Bearer ${jwtToken}` },
       });
       const fetchedMarkers = response.data.map((pin) => ({
@@ -95,7 +95,7 @@ export default function Home({ navigation }) {
   
       console.log('Pin Create DTO:', pinCreateDto); // Debug log
   
-      const response = await axios.post('http://localhost:8080/pins', pinCreateDto, {
+      const response = await axios.post('http://10.0.2.2:8080/pins', pinCreateDto, {
         headers: { Authorization: `Bearer ${token}` },
       });
   

@@ -6,12 +6,13 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 
 export default function MapWithMarkers({ markers, onMapPress }) {
-  const { token } = useContext(AuthContext);
+  const { token, userId } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPin, setSelectedPin] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [commentText, setCommentText] = useState('');
+  const [comments, setComments] = useState([]); // Add state to store comments
 
   const handleWebViewMessage = (event) => {
     const data = JSON.parse(event.nativeEvent.data);
@@ -22,16 +23,32 @@ export default function MapWithMarkers({ markers, onMapPress }) {
       console.log(data);
       setSelectedPin(data);
       fetchPinLikeInfo(data.id, token);
+      fetchCommentsForPin(data.id); // Fetch comments for the selected pin
     } else if (data.type === 'moreClick') {
       setModalVisible(true);
     }
   };
 
+  const fetchCommentsForPin = async (pinId) => {
+    try {
+      const response = await axios.get(
+          `http://10.0.2.2:8080/comments/comments-for-pin/${pinId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.status === 200) {
+        setComments(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  };
+
+
   const fetchPinLikeInfo = async (pinId, token) => {
     if (token) {
       try {
         const response = await axios.get(
-          `http://localhost:8080/pins/${pinId}/like-info`,
+          `http://10.0.2.2:8080/pins/${pinId}/like-info`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         if (response.status === 200) {
@@ -44,12 +61,6 @@ export default function MapWithMarkers({ markers, onMapPress }) {
       }
     }
   };
-  
-
-  const handleSendComment = () => {
-    console.log('Comment:', commentText);
-    setCommentText('');
-  };
 
   const handleLikePress = async () => {
     if (!token) {
@@ -59,7 +70,7 @@ export default function MapWithMarkers({ markers, onMapPress }) {
     try {
       if (!isLiked) {
         const response = await axios.put(
-          `http://localhost:8080/pins/${selectedPin.id}/like`,
+          `http://10.0.2.2:8080/pins/${selectedPin.id}/like`,
           null,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -69,7 +80,7 @@ export default function MapWithMarkers({ markers, onMapPress }) {
         }
       } else {
         const response = await axios.put(
-          `http://localhost:8080/pins/${selectedPin.id}/unlike`,
+          `http://10.0.2.2:8080/pins/${selectedPin.id}/unlike`,
           null,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -80,6 +91,32 @@ export default function MapWithMarkers({ markers, onMapPress }) {
       }
     } catch (error) {
       console.error('Error toggling like:', error);
+    }
+  };
+
+  const handleSendComment = async () => {
+    if (!commentText.trim()) {
+      console.error('Comment cannot be empty');
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+          `http://10.0.2.2:8080/comments`,
+          {
+            content: commentText,
+            userId: userId,
+            pinId: selectedPin?.id,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 201) {
+        setComments((prev) => [...prev, response.data]); // Add the new comment locally
+        setCommentText(''); // Clear the input field
+      }
+    } catch (error) {
+      console.error('Error creating comment:', error);
     }
   };
 
@@ -211,15 +248,17 @@ export default function MapWithMarkers({ markers, onMapPress }) {
               </TouchableOpacity>
               <Text style={styles.commentTitle}>Story</Text>
               <ScrollView style={styles.storyScrollView}>
-                <Text style={styles.modalStoryText}>{selectedPin.story}</Text> 
+                <Text style={styles.modalStoryText}>{selectedPin.story}</Text>
               </ScrollView>
-
                 <View style={styles.commentSection}>
               <Text style={styles.commentTitle}>Comments</Text>
               <ScrollView style={styles.commentList}>
-                {/* Simulated Comments */}
-                <Text style={styles.commentItem}>User1: This is an amazing place!</Text>
-                </ScrollView>
+                {comments.map((comment) => (
+                    <Text style={styles.commentItem} key={comment.id}>
+                      {`${comment.content}`}
+                    </Text>
+                ))}
+              </ScrollView>
               </View>
 
 
@@ -264,7 +303,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     width: '85%',
     backgroundColor: '#fff',
-    height: '50%',
+    height: '60%',
     borderRadius: 10,
     padding: 20,
   },
@@ -356,12 +395,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 1,
-  },
-  
-  commentItem: {
-    fontSize: 15,
-    color: '#555',
-    marginBottom: 10,
   },
 });
 

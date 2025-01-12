@@ -24,7 +24,7 @@ export default function PinComponent({ coordinate, story, likes = 0, pinId }) {
       return;
     }
     try {
-      const url = `http://localhost:8080/pins/${pinId}/${isLiked ? 'unlike' : 'like'}`;
+      const url = `http://10.0.2.2:8080/pins/${pinId}/${isLiked ? 'unlike' : 'like'}`;
       const response = await axios.put(url, null, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -55,7 +55,7 @@ export default function PinComponent({ coordinate, story, likes = 0, pinId }) {
     try {
       // Uncomment and configure when backend is ready
       // await axios.post(
-      //   `http://localhost:8080/pins/${pinId}/comments`,
+      //   `http://10.0.2.2:8080/pins/${pinId}/comments`,
       //   { text: commentText },
       //   { headers: { Authorization: `Bearer ${token}` } }
       // );
