@@ -14,6 +14,7 @@ public interface PinMapper {
     PinMapper INSTANCE = Mappers.getMapper(PinMapper.class);
 
     @Mapping(target = "user.id", source = "userId")
+    @Mapping(target = "challenge.id", source = "challengeId")
     Pin pinCreateDtoToPin(PinCreateDto pinCreateDto);
 
     Pin pinEditDtoToPin(PinEditDto pinEditDto);

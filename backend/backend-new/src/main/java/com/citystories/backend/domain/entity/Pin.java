@@ -43,15 +43,24 @@ public class Pin {
     @Column(nullable = false)
     private Double longitude;
 
+    @ManyToOne
+    @JoinColumn(name = "challenge_id")
+    private Challenge challenge; // Reference to the associated challenge (if any)
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.numberOfLikes = 0;
-        switch (this.visibilityDuration) {
-            case DAY -> this.expiresAt = createdAt.plusDays(1);
-            case WEEK -> this.expiresAt = createdAt.plusWeeks(1);
-            case MONTH -> this.expiresAt = createdAt.plusMonths(1);
-            case PERMANENT -> this.expiresAt = null;
+
+        if (challenge != null) {
+            this.expiresAt = challenge.getEndDate(); // Match challenge end date if part of a challenge
+        } else if (visibilityDuration != null) {
+            switch (this.visibilityDuration) {
+                case DAY -> this.expiresAt = createdAt.plusDays(1);
+                case WEEK -> this.expiresAt = createdAt.plusWeeks(1);
+                case MONTH -> this.expiresAt = createdAt.plusMonths(1);
+                case PERMANENT -> this.expiresAt = null;
+            }
         }
     }
 
@@ -59,7 +68,10 @@ public class Pin {
     @JoinColumn(name = "user_id", nullable = false)
     private UserData user;
 
-    @ManyToMany(mappedBy = "likedPins")
+    @ManyToMany(mappedBy = "likedPins", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<UserData> likedBy = new ArrayList<>(); // Initialize here
 
+    public boolean isChallengePin() {
+        return this.challenge != null;
+    }
 }

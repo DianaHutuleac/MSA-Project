@@ -10,4 +10,5 @@ public interface CommentService {
     CommentGetDto createComment(CommentCreateDto commentCreateDto);
     List<CommentGetDto> getAllCommentsForPin(Long pinId);
     List<CommentGetDto> getAllCommentsForUser(Long userId);
+    void deleteCommentById(Long id);
 }

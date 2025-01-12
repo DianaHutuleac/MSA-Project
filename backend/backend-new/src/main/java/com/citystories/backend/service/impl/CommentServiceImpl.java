@@ -31,8 +31,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentGetDto getCommentById(Long id) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new CommentNotFoundException("Comment with id " + id + " not found"));
+        Comment comment = findCommentById(id);
 
         return CommentMapper.INSTANCE.commentToCommentGetDto(comment);
     }
@@ -63,5 +62,17 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.getAllByUserId(userId).stream()
                 .map(CommentMapper.INSTANCE::commentToCommentGetDto)
                 .toList();
+    }
+
+    @Override
+    public void deleteCommentById(Long id) {
+        findCommentById(id);
+        commentRepository.deleteById(id);
+    }
+
+    private Comment findCommentById(Long id) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new CommentNotFoundException("Comment with id " + id + " not found"));
+        return comment;
     }
 }

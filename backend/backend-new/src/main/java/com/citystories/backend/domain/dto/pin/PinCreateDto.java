@@ -16,4 +16,5 @@ public class PinCreateDto {
     private VisibilityDuration visibilityDuration; // the enum field
     private Double latitude;
     private Double longitude;
+    private Long challengeId;
 }

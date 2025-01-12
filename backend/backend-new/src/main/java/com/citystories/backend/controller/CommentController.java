@@ -3,6 +3,7 @@ package com.citystories.backend.controller;
 import com.citystories.backend.domain.dto.comment.CommentCreateDto;
 import com.citystories.backend.domain.dto.comment.CommentGetDto;
 import com.citystories.backend.service.CommentService;
+import com.citystories.backend.service.impl.CommentServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
 
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentServiceImpl commentService) {
         this.commentService = commentService;
     }
 
@@ -36,5 +37,11 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<CommentGetDto> createComment(@RequestBody CommentCreateDto commentCreateDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createComment(commentCreateDto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteComment(@PathVariable Long id) {
+        commentService.deleteCommentById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted comment with id: " + id);
     }
 }

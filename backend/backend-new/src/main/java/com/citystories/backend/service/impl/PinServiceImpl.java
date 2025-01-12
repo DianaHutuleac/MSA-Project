@@ -5,11 +5,14 @@ import com.citystories.backend.domain.dto.pin.PinCreateDto;
 import com.citystories.backend.domain.dto.pin.PinEditDto;
 import com.citystories.backend.domain.dto.pin.PinLikeCountAndIsLikedResponseDto;
 import com.citystories.backend.domain.dto.pin.PinResponseDto;
+import com.citystories.backend.domain.entity.Challenge;
 import com.citystories.backend.domain.entity.Pin;
 import com.citystories.backend.domain.entity.UserData;
+import com.citystories.backend.exception.ChallengeNotFoundException;
 import com.citystories.backend.exception.PinNotFoundException;
 import com.citystories.backend.exception.UserNotFoundException;
 import com.citystories.backend.mapper.PinMapper;
+import com.citystories.backend.repository.ChallengeRepository;
 import com.citystories.backend.repository.PinRepository;
 import com.citystories.backend.repository.UserDataRepository;
 import com.citystories.backend.service.PinService;
@@ -25,10 +28,12 @@ import java.util.List;
 public class PinServiceImpl implements PinService {
     private final PinRepository pinRepository;
     private final UserDataRepository userDataRepository;
+    private final ChallengeRepository challengeRepository;
 
-    public PinServiceImpl(PinRepository pinRepository, UserDataRepository userDataRepository) {
+    public PinServiceImpl(PinRepository pinRepository, UserDataRepository userDataRepository, ChallengeRepository challengeRepository) {
         this.pinRepository = pinRepository;
         this.userDataRepository = userDataRepository;
+        this.challengeRepository = challengeRepository;
     }
 
     @Override
@@ -58,18 +63,26 @@ public class PinServiceImpl implements PinService {
 
     @Override
     public PinResponseDto createPin(PinCreateDto pinCreateDto) {
-        // Extract authenticated user ID from the SecurityContext
         String authenticatedUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+
         if (authenticatedUserId == null) {
             throw new UserNotFoundException("User ID is not available in the SecurityContext.");
         }
 
-        // Set the userId in the DTO
         pinCreateDto.setUserId(Long.parseLong(authenticatedUserId));
 
-        // Proceed with creating the pin
         UserData user = findUserById(pinCreateDto.getUserId());
+
         Pin pin = mapCreatePinDtoToPin(pinCreateDto, user);
+
+        if (pin.isChallengePin() && pinCreateDto.getChallengeId() != null) {
+            Challenge challenge = findChallengeById(pinCreateDto.getChallengeId());
+            pin.setChallenge(challenge);
+            pin.setExpiresAt(challenge.getEndDate()); // Match challenge end date
+        } else {
+            pin.setChallenge(null);
+        }
+
         Pin createdPin = pinRepository.save(pin);
         return mapToResponseDto(createdPin);
     }
@@ -222,5 +235,10 @@ public class PinServiceImpl implements PinService {
         Pin pin = PinMapper.INSTANCE.pinCreateDtoToPin(pinCreateDto);
         pin.setUser(user);
         return pin;
+    }
+
+    private Challenge findChallengeById(Long challengeId) {
+        return challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new ChallengeNotFoundException("Challenge with id " + challengeId + " not found"));
     }
 }
