@@ -4,5 +4,6 @@ public enum VisibilityDuration {
     DAY,
     WEEK,
     MONTH,
-    PERMANENT;
+    PERMANENT,
+    CHALLENGE,
 }

@@ -1,6 +1,5 @@
 package com.citystories.backend.domain.entity;
 
-import com.citystories.backend.domain.entity.Pin;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,4 +29,15 @@ public class Challenge {
 
     @OneToMany(mappedBy = "challenge")
     private List<Pin> pins = new ArrayList<>(); // Pins submitted for this challenge
+
+    // PrePersist method to set default endDate
+    @PrePersist
+    private void setDefaultEndDate() {
+        if (this.startDate == null) {
+            this.startDate = LocalDateTime.now(); // Default start date to now if not provided
+        }
+        if (this.endDate == null) {
+            this.endDate = this.startDate.plusWeeks(1); // Set end date to one week after start date
+        }
+    }
 }

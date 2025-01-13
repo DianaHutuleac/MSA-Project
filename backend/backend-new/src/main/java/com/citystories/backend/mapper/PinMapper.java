@@ -18,5 +18,8 @@ public interface PinMapper {
     Pin pinCreateDtoToPin(PinCreateDto pinCreateDto);
 
     Pin pinEditDtoToPin(PinEditDto pinEditDto);
+
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "challengeId", source = "challenge.id")
     PinResponseDto pinToPinGetDto(Pin pin);
 }

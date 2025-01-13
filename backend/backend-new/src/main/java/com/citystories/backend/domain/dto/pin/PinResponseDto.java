@@ -18,4 +18,6 @@ public class PinResponseDto {
     private LocalDateTime createdAt;
     private Double latitude;
     private Double longitude;
+    private Long challengeId;
+    private Long userId;
 }

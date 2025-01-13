@@ -1,47 +1,87 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import { AuthContext } from "../context/AuthContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import DropdownMenu from "../components/menus/DropdownMenu";
+import ChallengeModal from "../components/modals/ChallengeModal";
+import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import DropdownMenu from "../components/DropdownMenu";
 
 export default function Profile({ navigation }) {
-  const { logout } = useContext(AuthContext); // Access logout from AuthContext
-  const [userInfo, setUserInfo] = useState({ email: "", role: "" });
+  const { logout, token } = useContext(AuthContext);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [challengeTheme, setChallengeTheme] = useState("");
+  const [startDateTime, setStartDateTime] = useState(new Date());
 
-  useEffect(() => {
-    const fetchUserInfoFromToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem("authToken");
-        if (token) {
-          const decoded = jwtDecode(token);
-          setUserInfo({
-            email: decoded.email || "",
-          });
+  const userInfo = token ? jwtDecode(token) : { email: "", role: "" };
+
+  const handleLogout = () => {
+    logout();
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Welcome" }],
+    });
+  };
+
+  const handleCreateChallenge = async () => {
+    if (!challengeTheme) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    // Format the selected date-time manually (YYYY-MM-DDTHH:mm:ss)
+    const localDateTime = `${startDateTime.getFullYear()}-${String(
+      startDateTime.getMonth() + 1
+    ).padStart(2, "0")}-${String(startDateTime.getDate()).padStart(2, "0")}T${String(
+      startDateTime.getHours()
+    ).padStart(2, "0")}:${String(startDateTime.getMinutes()).padStart(2, "0")}:00`;
+
+    console.log("Local DateTime:", localDateTime);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/challenges",
+        {
+          theme: challengeTheme,
+          startDate: localDateTime,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      } catch (err) {
-        console.log("Error decoding token:", err);
-      }
-    };
-    fetchUserInfoFromToken();
-  }, []);
+      );
+
+      alert("Challenge created successfully: " + response.data.theme);
+      setIsModalVisible(false);
+      setChallengeTheme("");
+      setStartDateTime(new Date());
+    } catch (error) {
+      console.error("Error creating challenge:", error);
+      alert("Failed to create challenge. Please try again.");
+    }
+  };
 
   return (
     <View style={styles.container}>
       <DropdownMenu navigation={navigation} />
-      <Text style={styles.title}>User Profile</Text>
+      <Text style={styles.title}>{userInfo.role === "ROLE_ADMIN" ? "Admin Profile" : "User Profile"}</Text>
       <View style={styles.infoContainer}>
         <Text style={styles.infoText}>Email: {userInfo.email}</Text>
       </View>
-      <Button
-        title="Log Out"
-        onPress={() => {
-          logout(); // Clear context and AsyncStorage
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "Welcome" }],
-          });
-        }}
+      {userInfo.role === "ROLE_ADMIN" && (
+        <Button title="Add New Challenge" onPress={() => setIsModalVisible(true)} />
+      )}
+      <Button title="Log Out" onPress={handleLogout} />
+
+      {/* Challenge Modal */}
+      <ChallengeModal
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        challengeTheme={challengeTheme}
+        setChallengeTheme={setChallengeTheme}
+        startDateTime={startDateTime}
+        setStartDateTime={setStartDateTime}
+        onCreate={handleCreateChallenge}
       />
     </View>
   );

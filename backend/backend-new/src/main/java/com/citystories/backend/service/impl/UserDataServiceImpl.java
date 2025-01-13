@@ -38,7 +38,7 @@ public class UserDataServiceImpl implements UserDataService {
         // 2. Hash the raw password before saving
         String hashedPassword = passwordEncoder.encode(userCreateDto.getPassword());
         user.setPassword(hashedPassword);
-
+        user.setRole("ROLE_USER");
         // 3. Save user
         UserData savedUser = userDataRepository.save(user);
 
@@ -80,6 +80,7 @@ public class UserDataServiceImpl implements UserDataService {
         return JWT.create()
                 .withSubject(String.valueOf(user.getId()))
                 .withClaim("email", user.getEmail())
+                .withClaim("role", user.getRole())        // Add role claim
                 // Example: 1 day expiration (86,400,000 ms)
                 .withExpiresAt(new Date(System.currentTimeMillis() + 86_400_000))
                 .sign(Algorithm.HMAC256(SECRET_KEY));

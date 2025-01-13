@@ -32,7 +32,7 @@ export default function MapWithMarkers({ markers, onMapPress }) {
   const fetchCommentsForPin = async (pinId) => {
     try {
       const response = await axios.get(
-          `http://10.0.2.2:8080/comments/comments-for-pin/${pinId}`,
+          `http://localhost:8080/comments/comments-for-pin/${pinId}`,
           { headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.status === 200) {
@@ -48,7 +48,7 @@ export default function MapWithMarkers({ markers, onMapPress }) {
     if (token) {
       try {
         const response = await axios.get(
-          `http://10.0.2.2:8080/pins/${pinId}/like-info`,
+          `http://localhost:8080/pins/${pinId}/like-info`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         if (response.status === 200) {
@@ -70,7 +70,7 @@ export default function MapWithMarkers({ markers, onMapPress }) {
     try {
       if (!isLiked) {
         const response = await axios.put(
-          `http://10.0.2.2:8080/pins/${selectedPin.id}/like`,
+          `http://localhost:8080/pins/${selectedPin.id}/like`,
           null,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -80,7 +80,7 @@ export default function MapWithMarkers({ markers, onMapPress }) {
         }
       } else {
         const response = await axios.put(
-          `http://10.0.2.2:8080/pins/${selectedPin.id}/unlike`,
+          `http://localhost:8080/pins/${selectedPin.id}/unlike`,
           null,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -100,9 +100,23 @@ export default function MapWithMarkers({ markers, onMapPress }) {
       return;
     }
 
+    const handleSaveChallengeStory = async (story) => {
+      try {
+        const response = await axios.post(
+          `http://localhost:8080/pins`,
+          { story, challengeId: "active" }, // Adjust backend logic if needed
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (response.status === 201) {
+          alert("Story submitted successfully!");
+        }
+      } catch (error) {
+        console.error("Error saving challenge story:", error);
+      }
+    };
     try {
       const response = await axios.post(
-          `http://10.0.2.2:8080/comments`,
+          `http://localhost:8080/comments`,
           {
             content: commentText,
             userId: userId,

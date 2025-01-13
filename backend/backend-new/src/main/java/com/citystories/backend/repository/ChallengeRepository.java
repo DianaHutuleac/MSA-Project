@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
-    @Query("SELECT c FROM Challenge c WHERE c.startDate <= :currentDate AND c.endDate >= :currentDate")
+    @Query(
+            value = "SELECT * FROM challenge c WHERE c.start_date <= :currentDate AND c.end_date >= :currentDate ORDER BY c.start_date ASC LIMIT 1",
+            nativeQuery = true
+    )
     Optional<Challenge> findActiveChallenge(@Param("currentDate") LocalDateTime currentDate);
 }
