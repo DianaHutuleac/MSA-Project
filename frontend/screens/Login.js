@@ -42,7 +42,7 @@ export default function Login({ navigation }) {
         }
 
         // 4) Navigate to next screen
-        navigation.replace("DrawerNavigator");
+        navigation.replace("Home");
       } catch (error) {
         console.error(error);
         alert("Login failed");

@@ -48,7 +48,7 @@ export default function Register({ navigation }) {
       }
 
       // 4) Navigate to the main screen or some other screen
-      navigation.replace("DrawerNavigator");
+      navigation.replace("Home");
     } catch (error) {
       console.error("Register error:", error);
       Alert.alert("Error", "Something went wrong during registration");

@@ -1,9 +1,10 @@
 import React, { useContext, useState } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import DropdownMenu from "../components/menus/DropdownMenu";
 import ChallengeModal from "../components/modals/ChallengeModal";
 import axios from "axios";
+import { Ionicons } from "@expo/vector-icons"; // Import Ionicons for the logout icon
 import { jwtDecode } from "jwt-decode";
 
 export default function Profile({ navigation }) {
@@ -28,7 +29,6 @@ export default function Profile({ navigation }) {
       return;
     }
 
-    // Format the selected date-time manually (YYYY-MM-DDTHH:mm:ss)
     const localDateTime = `${startDateTime.getFullYear()}-${String(
       startDateTime.getMonth() + 1
     ).padStart(2, "0")}-${String(startDateTime.getDate()).padStart(2, "0")}T${String(
@@ -61,17 +61,36 @@ export default function Profile({ navigation }) {
     }
   };
 
+  const handleViewMyPins = () => {
+    navigation.navigate("MyPins");
+  };
+
   return (
     <View style={styles.container}>
       <DropdownMenu navigation={navigation} />
-      <Text style={styles.title}>{userInfo.role === "ROLE_ADMIN" ? "Admin Profile" : "User Profile"}</Text>
-      <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>Email: {userInfo.email}</Text>
-      </View>
+      <Text style={styles.title}>
+        {userInfo.role === "ROLE_ADMIN" ? "Admin Profile" : "User Profile"}
+      </Text>
+
+      <TouchableOpacity style={styles.myPinsButton} onPress={handleViewMyPins}>
+        <Ionicons name="location-outline" size={24} color="#333" />
+        <Text style={styles.myPinsText}>My Pins</Text>
+      </TouchableOpacity>
+
       {userInfo.role === "ROLE_ADMIN" && (
-        <Button title="Add New Challenge" onPress={() => setIsModalVisible(true)} />
+        <TouchableOpacity
+          style={styles.addChallengeButton}
+          onPress={() => setIsModalVisible(true)}
+        >
+          <Ionicons name="add-circle-outline" size={24} color="#333" />
+          <Text style={styles.addChallengeText}>Add New Challenge</Text>
+        </TouchableOpacity>
       )}
-      <Button title="Log Out" onPress={handleLogout} />
+
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Ionicons name="log-out-outline" size={24} color="#fff" />
+        <Text style={styles.logoutText}>Log Out</Text>
+      </TouchableOpacity>
 
       {/* Challenge Modal */}
       <ChallengeModal
@@ -91,7 +110,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#fffff9",
     alignItems: "center",
   },
   title: {
@@ -100,19 +119,46 @@ const styles = StyleSheet.create({
     marginTop: 80,
     marginBottom: 20,
   },
-  infoContainer: {
-    marginBottom: 30,
+  addChallengeButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#e3e3e3",
     padding: 10,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    width: "100%",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
+    borderRadius: 8,
+    marginBottom: 20,
   },
-  infoText: {
+  addChallengeText: {
     fontSize: 16,
-    marginVertical: 5,
+    fontWeight: "bold",
+    color: "#333",
+    marginLeft: 10,
+  },
+  logoutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#d9534f",
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  logoutText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+    marginLeft: 10,
+  },
+  myPinsButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#e3e3e3",
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  myPinsText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+    marginLeft: 10,
   },
 });

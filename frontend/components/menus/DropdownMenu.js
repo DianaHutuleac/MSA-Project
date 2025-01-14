@@ -1,4 +1,3 @@
-// file: components/DropdownMenu.js
 import React, { useState } from 'react';
 import {
     View,
@@ -20,7 +19,6 @@ export default function DropdownMenu({ navigation }) {
         navigation.navigate('Profile');
     };
 
-    // If you only have "Home" and "Profile", just keep those two items
     const handleHomePress = () => {
         setMenuVisible(false);
         navigation.navigate('Home');
@@ -37,13 +35,13 @@ export default function DropdownMenu({ navigation }) {
             {menuVisible && (
                 <View style={styles.dropdownMenu}>
                     <TouchableOpacity style={styles.menuItem} onPress={handleHomePress}>
-                        <Ionicons name="home" size={20} color="black" style={{ marginRight: 8 }} />
-                        <Text>Home</Text>
+                        <Ionicons name="home-outline" size={20} color="black" style={{ marginRight: 8 }} />
+                        <Text style={styles.menuItemText}>Home</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.menuItem} onPress={handleProfilePress}>
-                        <Ionicons name="person" size={20} color="black" style={{ marginRight: 8 }} />
-                        <Text>Profile</Text>
+                        <Ionicons name="person-outline" size={20} color="black" style={{ marginRight: 8 }} />
+                        <Text style={styles.menuItemText}>Profile</Text>
                     </TouchableOpacity>
                 </View>
             )}
@@ -57,7 +55,7 @@ const styles = StyleSheet.create({
         top: 50,
         left: 20,
         zIndex: 1000,
-        backgroundColor: '#fffff0',
+        backgroundColor: '#ffffff', // White background for the button
         padding: 10,
         borderRadius: 50,
         shadowColor: '#000',
@@ -66,23 +64,30 @@ const styles = StyleSheet.create({
     },
     dropdownMenu: {
         position: 'absolute',
-        top: 100, // just below the menu button
-        left: 20,
-        backgroundColor: '#fff',
+        top: 100, // Adjust to position below the button
+        left: 20, // Align with the button
+        backgroundColor: 'rgba(255, 255, 255, 0.95)', // Neutral semi-transparent background
         borderRadius: 8,
         paddingVertical: 5,
         width: 150,
-        zIndex: 1100,
-        shadowColor: '#000',
+        borderColor: '#ccc', // Light gray border
+        borderWidth: 1,
+        shadowColor: '#000', // Subtle shadow
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
+        shadowOpacity: 0.2,
         shadowRadius: 4,
-        elevation: 5,
+        elevation: 3, // For Android
+        zIndex: 1100,
     },
     menuItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 8,
-        paddingHorizontal: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 12,
+        backgroundColor: 'transparent', // Transparent to match the dropdown
+    },
+    menuItemText: {
+        color: '#333', // Dark gray text for better visibility
+        fontSize: 16,
     },
 });

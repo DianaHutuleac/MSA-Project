@@ -114,6 +114,7 @@ export default function MapWithMarkers({ markers, onMapPress }) {
         console.error("Error saving challenge story:", error);
       }
     };
+    
     try {
       const response = await axios.post(
           `http://localhost:8080/comments`,
@@ -160,7 +161,7 @@ export default function MapWithMarkers({ markers, onMapPress }) {
       <body>
         <div id="map"></div>
         <script>
-          const map = L.map('map').setView([45.755, 21.230], 14);
+          const map = L.map('map', {zoomControl: false}).setView([45.755, 21.230], 14);
 
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
@@ -184,12 +185,32 @@ export default function MapWithMarkers({ markers, onMapPress }) {
             popupAnchor: [0, -40],
           });
 
+          const challengePin = L.divIcon({
+            html: \`
+              <svg
+                width="50"
+                height="50"
+                viewBox="0 0 24 24"
+                fill="#7E007B"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M12 2C8.68636 2 6 4.68636 6 8C6 11.8236 9.65227 16.2513 11.5091 18.5645C11.7441 18.8627 12.2559 18.8627 12.4909 18.5645C14.3477 16.2513 18 11.8236 18 8C18 4.68636 15.3136 2 12 2ZM12 10.2C10.5652 10.2 9.4 9.03484 9.4 7.6C9.4 6.16516 10.5652 5 12 5C13.4348 5 14.6 6.16516 14.6 7.6C14.6 9.03484 13.4348 10.2 12 10.2Z"></path>
+              </svg>
+            \`,
+            className: '',
+            iconSize: [40, 40],
+            iconAnchor: [20, 40],
+            popupAnchor: [0, -40],
+          });
+
           const markersData = ${JSON.stringify(markers)};
 
           markersData.forEach(marker => {
+            const pinIcon = marker.challengeId ? challengePin : pinkPin;
+
             const pin = L.marker(
               [marker.coordinates[1], marker.coordinates[0]],
-              { icon: pinkPin }
+              { icon: pinIcon }
             ).addTo(map);
 
             pin.bindPopup(\`

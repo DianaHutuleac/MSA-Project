@@ -39,6 +39,7 @@ export default function Home({ navigation }) {
         coordinates: [pin.longitude, pin.latitude],
         story: pin.story,
         likeCount: pin.numberOfLikes || 0,
+        challengeId: pin.challengeId || null,
       }));
       console.log("Fetched Markers:", fetchedMarkers); // Debug log
       setMarkers(fetchedMarkers);
