@@ -161,6 +161,8 @@ export default function Home({ navigation }) {
           onSave={handlePinSubmit}
           coordinates={newPinCoordinate}
           activeChallenge={activeChallenge} // Pass activeChallenge here
+          storyText={storyText}
+          setStoryText={setStoryText}
         />
       )}
     </View>

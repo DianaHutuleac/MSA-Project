@@ -14,9 +14,10 @@ export default function ChallengeStoryModal({
   onSave,
   coordinates,
   activeChallenge, // Pass activeChallenge as a prop
+  storyText,
+  setStoryText,
 }) {
-  const [storyText, setStoryText] = useState("");
-
+  
   const handleSave = () => {
     if (!storyText.trim()) {
       alert("Story cannot be empty!");
