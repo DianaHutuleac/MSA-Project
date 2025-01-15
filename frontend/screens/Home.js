@@ -19,19 +19,20 @@ export default function Home({ navigation }) {
   const [visibilityDuration, setVisibilityDuration] = useState('PERMANENT');
   const [activeChallenge, setActiveChallenge] = useState(null);
   const [modalType, setModalType] = useState(null); // Tracks the type of modal to show
+  const [challengeWinnerPin, setChallengeWinnerPin] = useState(null);
 
   useEffect(() => {
     if (token) {
       console.log("Token changed, fetching pins"); // Debug log
-
       fetchAllPins(token);
+      fetchChallengeWinnerPin(token);
     }
   }, [token]);
 
   const fetchAllPins = async (jwtToken) => {
     console.log("Fetching pins with token:", jwtToken); // Debug log
     try {
-      const response = await axios.get("http://localhost:8080/pins", {
+      const response = await axios.get("http://172.20.10.4:8080/pins", {
         headers: { Authorization: `Bearer ${jwtToken}` },
       });
       const fetchedMarkers = response.data.map((pin) => ({
@@ -51,11 +52,13 @@ export default function Home({ navigation }) {
     
   const fetchActiveChallenge = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/challenges/active", {
+      const response = await axios.get("http://172.20.10.4:8080/challenges/active", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status === 200) {
         setActiveChallenge(response.data);
+      } else if (response.status === 404) {
+        setActiveChallenge("Not Found");
       }
     } catch (error) {
       console.error("Error fetching active challenge:", error);
@@ -93,10 +96,35 @@ export default function Home({ navigation }) {
     }
   };
 
+  const fetchChallengeWinnerPin = async (token) => {
+  try {
+    const response = await axios.put(
+      "http://172.20.10.4:8080/challenges/process-previous-challenge",
+      {}, // PUT requests can include a body; pass an empty object if not needed
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Pass the token for authentication
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      setChallengeWinnerPin(response.data);
+    } else {
+      console.error("Failed to fetch the winning pin:", response.status);
+      setChallengeWinnerPin(null);
+    }
+  } catch (error) {
+    console.error("Error fetching the winning pin:", error);
+    return null;
+  }
+};
+
+
 
   const handleSavePin = async (pinData) => {
     try {
-      const response = await axios.post('http://localhost:8080/pins', pinData, {
+      const response = await axios.post('http://172.20.10.4:8080/pins', pinData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const createdPin = {
@@ -143,6 +171,7 @@ export default function Home({ navigation }) {
         markers={markers}
         onMapPress={handleMapPress}
         onPinPress={(pin) => Alert.alert('Pin Details', pin.story)}
+        challengeWinnerPin = {challengeWinnerPin}
       />
       {modalType === 'normal' && (
         <StoryModal

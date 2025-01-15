@@ -27,8 +27,15 @@ public class Challenge {
 
     private LocalDateTime endDate;
 
+    @Column(nullable = false)
+    private boolean processed = false;
+
     @OneToMany(mappedBy = "challenge")
     private List<Pin> pins = new ArrayList<>(); // Pins submitted for this challenge
+
+    @OneToOne
+    @JoinColumn(name = "winning_pin_id")
+    private Pin winningPin;
 
     // PrePersist method to set default endDate
     @PrePersist

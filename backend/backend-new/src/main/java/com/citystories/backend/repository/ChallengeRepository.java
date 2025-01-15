@@ -14,4 +14,13 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
             nativeQuery = true
     )
     Optional<Challenge> findActiveChallenge(@Param("currentDate") LocalDateTime currentDate);
+
+    @Query("SELECT c FROM Challenge c WHERE c.endDate < :currentDate AND c.processed = false ORDER BY c.endDate DESC LIMIT 1")
+    Optional<Challenge> findUnprocessedChallengeBefore(@Param("currentDate") LocalDateTime currentDate);
+
+    @Query("SELECT c FROM Challenge c " +
+            "WHERE c.processed = true " +
+            "ORDER BY c.endDate DESC LIMIT 1")
+    Optional<Challenge> findLastProcessedChallenge();
+
 }

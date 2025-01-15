@@ -30,7 +30,7 @@ export default function Register({ navigation }) {
     try {
       // 1) Call the new /auth/register endpoint
       const response = await axios.post(
-          "http://localhost:8080/auth/register",
+          "http://172.20.10.4:8080/auth/register",
           {
             email,
             password,

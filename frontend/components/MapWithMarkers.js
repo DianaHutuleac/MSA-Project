@@ -1,18 +1,20 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { StyleSheet, Modal, View, Text, TouchableOpacity, TextInput, Button, ScrollView } from 'react-native';
+import { StyleSheet, Modal, View, Text, TouchableOpacity, TextInput, Button, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import PinModal from './modals/PinModal';
 
 export default function MapWithMarkers({ markers, onMapPress }) {
   const { token, userId } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPin, setSelectedPin] = useState(null);
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
-  const [commentText, setCommentText] = useState('');
-  const [comments, setComments] = useState([]); // Add state to store comments
+  const [winnerPin, setWinnerPin] = useState(null);
+
+  useEffect(() => {
+    fetchLastProcessedWinner();
+  }, []);
 
   const handleWebViewMessage = (event) => {
     const data = JSON.parse(event.nativeEvent.data);
@@ -22,118 +24,30 @@ export default function MapWithMarkers({ markers, onMapPress }) {
     } else if (data.type === 'pinClick') {
       console.log(data);
       setSelectedPin(data);
-      fetchPinLikeInfo(data.id, token);
-      fetchCommentsForPin(data.id); // Fetch comments for the selected pin
     } else if (data.type === 'moreClick') {
       setModalVisible(true);
     }
-  };
+  }; 
 
-  const fetchCommentsForPin = async (pinId) => {
+  const fetchLastProcessedWinner = async () => {
     try {
+      // Endpoint must match your backend route
+      // e.g. GET /challenges/last-processed/winner
       const response = await axios.get(
-          `http://localhost:8080/comments/comments-for-pin/${pinId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+        'http://172.20.10.4:8080/challenges/last-processed/winner',
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
       );
-      if (response.status === 200) {
-        setComments(response.data);
-      }
+      setWinnerPin(response.data); // store the PinResponseDto
     } catch (error) {
-      console.error('Error fetching comments:', error);
+      console.error('Error fetching last processed winner:', error);
+      // Optional: Alert user or silently fail
+      // Alert.alert('Error', 'Could not fetch last processed challenge winner.');
     }
   };
 
-
-  const fetchPinLikeInfo = async (pinId, token) => {
-    if (token) {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/pins/${pinId}/like-info`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (response.status === 200) {
-          console.log(response.data);
-          setIsLiked(response.data.liked); // Set whether the pin is liked
-          setLikeCount(response.data.numberOfLikes); // Set the like count
-        }
-      } catch (error) {
-        console.error('Error fetching like info:', error);
-      }
-    }
-  };
-
-  const handleLikePress = async () => {
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
-    try {
-      if (!isLiked) {
-        const response = await axios.put(
-          `http://localhost:8080/pins/${selectedPin.id}/like`,
-          null,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (response.status === 200) {
-          setIsLiked(true);
-          setLikeCount(likeCount + 1);
-        }
-      } else {
-        const response = await axios.put(
-          `http://localhost:8080/pins/${selectedPin.id}/unlike`,
-          null,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (response.status === 200) {
-          setIsLiked(false);
-          setLikeCount(likeCount - 1);
-        }
-      }
-    } catch (error) {
-      console.error('Error toggling like:', error);
-    }
-  };
-
-  const handleSendComment = async () => {
-    if (!commentText.trim()) {
-      console.error('Comment cannot be empty');
-      return;
-    }
-
-    const handleSaveChallengeStory = async (story) => {
-      try {
-        const response = await axios.post(
-          `http://localhost:8080/pins`,
-          { story, challengeId: "active" }, // Adjust backend logic if needed
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (response.status === 201) {
-          alert("Story submitted successfully!");
-        }
-      } catch (error) {
-        console.error("Error saving challenge story:", error);
-      }
-    };
-    
-    try {
-      const response = await axios.post(
-          `http://localhost:8080/comments`,
-          {
-            content: commentText,
-            userId: userId,
-            pinId: selectedPin?.id,
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (response.status === 201) {
-        setComments((prev) => [...prev, response.data]); // Add the new comment locally
-        setCommentText(''); // Clear the input field
-      }
-    } catch (error) {
-      console.error('Error creating comment:', error);
-    }
-  };
+  const winnerIdString = winnerPin ? winnerPin.id.toString() : 'null';
 
   const mapHtml = `
     <!DOCTYPE html>
@@ -203,11 +117,39 @@ export default function MapWithMarkers({ markers, onMapPress }) {
             popupAnchor: [0, -40],
           });
 
+          const goldWinnerPin = L.divIcon({
+            html: \`
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="gold"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C8.68636 2 6 4.68636 6 8C6 
+                         11.8236 9.65227 16.2513 11.5091 
+                         18.5645C11.7441 18.8627 12.2559 
+                         18.8627 12.4909 18.5645C14.3477 
+                         16.2513 18 11.8236 18 8C18 4.68636 
+                         15.3136 2 12 2ZM12 10.2C10.5652 
+                         10.2 9.4 9.03484 9.4 7.6C9.4 6.16516 
+                         10.5652 5 12 5C13.4348 5 14.6 
+                         6.16516 14.6 7.6C14.6 9.03484 13.4348 
+                         10.2 12 10.2Z"/>
+              </svg>
+            \`,
+            className: '',
+            iconSize: [60, 60],
+            iconAnchor: [30, 60],
+            popupAnchor: [0, -60],
+          });
+
+
           const markersData = ${JSON.stringify(markers)};
+          const WINNER_ID = "${winnerIdString}";
 
           markersData.forEach(marker => {
             const pinIcon = marker.challengeId ? challengePin : pinkPin;
 
+            if (marker.id.toString() === WINNER_ID) {
+              pinIcon = goldWinnerPin;
+            }
+            
             const pin = L.marker(
               [marker.coordinates[1], marker.coordinates[0]],
               { icon: pinIcon }
@@ -265,62 +207,16 @@ export default function MapWithMarkers({ markers, onMapPress }) {
         style={styles.map}
       />
 
-      <Modal
-        visible={modalVisible}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            {selectedPin && (  
-              <>
-              <TouchableOpacity
-              style={styles.closeIcon}
-              onPress={() => setModalVisible(false)}
-              >
-                <Ionicons name="close" size={24} color="#333" />
-              </TouchableOpacity>
-              <Text style={styles.commentTitle}>Story</Text>
-              <ScrollView style={styles.storyScrollView}>
-                <Text style={styles.modalStoryText}>{selectedPin.story}</Text>
-              </ScrollView>
-                <View style={styles.commentSection}>
-              <Text style={styles.commentTitle}>Comments</Text>
-              <ScrollView style={styles.commentList}>
-                {comments.map((comment) => (
-                    <Text style={styles.commentItem} key={comment.id}>
-                      {`${comment.content}`}
-                    </Text>
-                ))}
-              </ScrollView>
-              </View>
-
-
-                <View style={styles.interactRow}>
-                  <TouchableOpacity onPress={handleLikePress} style={styles.likeButton}>
-                    <Ionicons
-                      name={isLiked ? 'heart' : 'heart-outline'}
-                      size={24}
-                      color={isLiked ? '#F26CA7' : '#888'}
-                    />
-                    <Text style={styles.likeText}>{likeCount}</Text>
-                  </TouchableOpacity>
-                    <TextInput
-                    style={styles.commentInput}
-                    placeholder="Write a comment..."
-                    value={commentText}
-                    onChangeText={setCommentText}
-                  />
-                  <TouchableOpacity onPress={handleSendComment} style={styles.sendIcon}>
-                    <Ionicons name="send" size={24} color="#333" />
-                  </TouchableOpacity>                
-            </View>
-                 </>
-            )}
-          </View>
-        </View>
-      </Modal>
+        <PinModal
+          visible={modalVisible}
+          onClose={() => {
+            setModalVisible(false);
+            setSelectedPin(null);
+          }}
+          pin={selectedPin}
+          token={token}
+          userId={userId}
+        />
     </>
   );
 }

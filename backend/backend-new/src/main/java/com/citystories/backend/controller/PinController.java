@@ -72,4 +72,9 @@ public class PinController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/liked-by-user/{userId}")
+    public ResponseEntity<List<PinResponseDto>> getPinsLikedByUser(@PathVariable Long userId) {
+        List<PinResponseDto> likedPins = pinService.getPinsLikedByUser(userId);
+        return ResponseEntity.ok(likedPins);
+    }
 }

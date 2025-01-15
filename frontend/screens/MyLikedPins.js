@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import DropdownMenu from "../components/menus/DropdownMenu";
 import PinModal from "../components/modals/PinModal";
 
-export default function MyPins({ navigation }) {
+export default function MyLikedPins({ navigation }) {
   const { token, userId } = useContext(AuthContext);
   const [pins, setPins] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +26,7 @@ export default function MyPins({ navigation }) {
     const fetchPins = async () => {
       try {
         const response = await axios.get(
-          `http://172.20.10.4:8080/pins/all-pins-for-user/${userId}`,
+          `http://172.20.10.4:8080/pins/liked-by-user/${userId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -66,7 +66,7 @@ export default function MyPins({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <DropdownMenu navigation={navigation} />
-      <Text style={styles.title}>My Pins</Text>
+      <Text style={styles.title}>Liked Pins</Text>
 
       {pins.length > 0 ? (
         <FlatList

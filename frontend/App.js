@@ -8,6 +8,7 @@ import Register from './screens/Register';
 import Home from './screens/Home';
 import Profile from './screens/Profile';
 import MyPins from './screens/MyPins';
+import MyLikedPins from './screens/MyLikedPins';
 
 const Stack = createStackNavigator();
 
@@ -63,7 +64,12 @@ export default function App() {
                         name="MyPins"
                         component={MyPins}
                         options={{ headerShown: false }}
+                    />
 
+                    <Stack.Screen
+                        name="MyLikedPins"
+                        component={MyLikedPins}
+                        options={{ headerShown: false }}
                     />
                 </Stack.Navigator>
             </NavigationContainer>

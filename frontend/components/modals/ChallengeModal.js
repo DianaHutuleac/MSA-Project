@@ -1,5 +1,15 @@
 import React from "react";
-import { View, Text, Modal, StyleSheet, Button, TextInput, Platform } from "react-native";
+import { 
+  View, 
+  Text, 
+  Modal, 
+  StyleSheet, 
+  Button, 
+  TextInput, 
+  Platform,
+  KeyboardAvoidingView,
+  ScrollView
+} from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function ChallengeModal({
@@ -18,34 +28,42 @@ export default function ChallengeModal({
       transparent={true}
       onRequestClose={onClose}
     >
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Add New Challenge</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Challenge Theme"
-            value={challengeTheme}
-            onChangeText={setChallengeTheme}
-          />
-          <View style={styles.selectDateTimeContainer}>
-            <DateTimePicker
-              value={startDateTime}
-              mode="datetime"
-              display={Platform.OS === "ios" ? "compact" : "default"}
-              onChange={(event, selectedDate) => {
-                if (selectedDate) {
-                  setStartDateTime(selectedDate);
-                }
-              }}
+      <KeyboardAvoidingView
+        style={styles.modalContainer}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent} 
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Add New Challenge</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Challenge Theme"
+              value={challengeTheme}
+              onChangeText={setChallengeTheme}
             />
-            <Text style={styles.infoText}>
-              Selected Date & Time: {startDateTime.toLocaleString()}
-            </Text>
+            <View style={styles.selectDateTimeContainer}>
+              <DateTimePicker
+                value={startDateTime}
+                mode="datetime"
+                display={Platform.OS === "ios" ? "compact" : "default"}
+                onChange={(event, selectedDate) => {
+                  if (selectedDate) {
+                    setStartDateTime(selectedDate);
+                  }
+                }}
+              />
+              <Text style={styles.infoText}>
+                Selected Date & Time: {startDateTime.toLocaleString()}
+              </Text>
+            </View>
+            <Button title="Create Challenge" onPress={onCreate} />
+            <Button title="Cancel" onPress={onClose} />
           </View>
-          <Button title="Create Challenge" onPress={onCreate} />
-          <Button title="Cancel" onPress={onClose} />
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
@@ -53,16 +71,17 @@ export default function ChallengeModal({
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)", // dark backdrop
+  },
+  scrollContent: {
+    flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  selectDateTimeContainer: {
-    alignItems: "center", // Center everything horizontally
-    marginVertical: 10, // Add spacing above and below
+    padding: 20,
   },
   modalContent: {
-    width: "80%",
+    width: "100%",
+    maxWidth: 350,
     backgroundColor: "#fff",
     borderRadius: 10,
     padding: 20,
@@ -84,6 +103,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 15,
     paddingHorizontal: 10,
+  },
+  selectDateTimeContainer: {
+    alignItems: "center",
+    marginVertical: 10,
   },
   infoText: {
     fontSize: 16,

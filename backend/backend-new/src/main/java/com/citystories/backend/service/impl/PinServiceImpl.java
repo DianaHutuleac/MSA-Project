@@ -196,6 +196,18 @@ public class PinServiceImpl implements PinService {
                 .build();
     }
 
+    @Override
+    public List<PinResponseDto> getPinsLikedByUser(Long userId) {
+        // Find the user
+        UserData user = findUserById(userId);
+
+        // Get the list of liked pins
+        List<Pin> likedPins = user.getLikedPins();
+
+        // Map to PinResponseDto and return
+        return mapToResponseDtoList(likedPins);
+    }
+
     private Pin findPinById(Long pinId) {
         return pinRepository.findById(pinId)
                 .orElseThrow(() -> new PinNotFoundException("Pin with ID " + pinId + " not found"));

@@ -28,19 +28,19 @@ export default function DropdownMenu({ navigation }) {
         <>
             {/* The hamburger button */}
             <TouchableOpacity style={styles.menuButton} onPress={toggleMenu}>
-                <Ionicons name="menu" size={30} color="black" />
+                <Ionicons name="menu" size={30} color="#fff" />
             </TouchableOpacity>
 
             {/* The dropdown */}
             {menuVisible && (
                 <View style={styles.dropdownMenu}>
                     <TouchableOpacity style={styles.menuItem} onPress={handleHomePress}>
-                        <Ionicons name="home-outline" size={20} color="black" style={{ marginRight: 8 }} />
+                        <Ionicons name="home-outline" size={20} color="#2F4F4F" style={{ marginRight: 8 }} />
                         <Text style={styles.menuItemText}>Home</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.menuItem} onPress={handleProfilePress}>
-                        <Ionicons name="person-outline" size={20} color="black" style={{ marginRight: 8 }} />
+                        <Ionicons name="person-outline" size={20} color="#2F4F4F" style={{ marginRight: 8 }} />
                         <Text style={styles.menuItemText}>Profile</Text>
                     </TouchableOpacity>
                 </View>
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         top: 50,
         left: 20,
         zIndex: 1000,
-        backgroundColor: '#ffffff', // White background for the button
+        backgroundColor: '#2F4F4F',
         padding: 10,
         borderRadius: 50,
         shadowColor: '#000',
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent', // Transparent to match the dropdown
     },
     menuItemText: {
-        color: '#333', // Dark gray text for better visibility
+        color: '#2F4F4F', // Dark gray text for better visibility
         fontSize: 16,
     },
 });

@@ -19,4 +19,5 @@ public interface PinService {
     PinResponseDto removeLikeFromPin(Long id);
     PinResponseDto getPinByUserId(Long userId);
     PinLikeCountAndIsLikedResponseDto getPinLikeCountAndIsLiked(Long pinId);
+    List<PinResponseDto> getPinsLikedByUser(Long userId);
 }
