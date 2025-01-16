@@ -1,5 +1,13 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Image, Animated, ImageBackground, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Animated,
+  ImageBackground,
+  TouchableOpacity,
+} from "react-native";
 
 export default function Welcome({ navigation }) {
   const scaleAnim = useRef(new Animated.Value(1)).current; // Initial scale value
@@ -33,7 +41,7 @@ export default function Welcome({ navigation }) {
         ]}
       >
         <ImageBackground
-          source={require('../assets/background_map.jpeg')}
+          source={require("../assets/background_map.jpeg")}
           style={styles.background}
         />
       </Animated.View>
@@ -43,16 +51,19 @@ export default function Welcome({ navigation }) {
 
       {/* Fixed Content */}
       <View style={styles.content}>
-        <Image
-          source={require('../assets/logo.png')}
-          style={styles.logo}
-        />
+        <Image source={require("../assets/logo.png")} style={styles.logo} />
 
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Login")}
+        >
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Register")}
+        >
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
       </View>
@@ -66,37 +77,37 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#FFFFF0',
+    backgroundColor: "#FFFFF0",
     opacity: 0.3,
   },
   content: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 20,
   },
   logo: {
     width: 300,
     height: 200,
     marginBottom: 50,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   button: {
-    backgroundColor: '#FFFFF0',
+    backgroundColor: "#FFFFF0",
     borderWidth: 0.2,
     borderRadius: 100,
     padding: 15,
     marginVertical: 10,
-    width: '60%',
-    alignItems: 'center',
+    width: "60%",
+    alignItems: "center",
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
   },
 });

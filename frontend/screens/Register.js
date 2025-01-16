@@ -19,7 +19,7 @@ import { AuthContext } from "../context/AuthContext";
 export default function Register({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {setToken} = useContext(AuthContext);
+  const { setToken } = useContext(AuthContext);
 
   const handleRegister = async () => {
     if (!email || !password) {
@@ -28,26 +28,22 @@ export default function Register({ navigation }) {
     }
 
     try {
-      // 1) Call the new /auth/register endpoint
       const response = await axios.post(
-          "http://172.20.10.4:8080/auth/register",
-          {
-            email,
-            password,
-          }
+        "http://172.20.10.4:8080/auth/register",
+        {
+          email,
+          password,
+        }
       );
 
-      // 2) The response should contain { token, user: { ... } }
       const data = response.data;
       console.log("Register success:", data);
 
-      // 3) If you want to automatically log them in:
       if (data && data.token) {
         await AsyncStorage.setItem("authToken", data.token);
         setToken(data.token); // Update context immediately
       }
 
-      // 4) Navigate to the main screen or some other screen
       navigation.replace("Home");
     } catch (error) {
       console.error("Register error:", error);
@@ -56,54 +52,54 @@ export default function Register({ navigation }) {
   };
 
   return (
-      <ImageBackground
-          source={require("../assets/background_map.jpeg")}
-          style={styles.background}
+    <ImageBackground
+      source={require("../assets/background_map.jpeg")}
+      style={styles.background}
+    >
+      <View style={styles.overlay} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
       >
-        <View style={styles.overlay} />
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container}
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
         >
-          <ScrollView
-              contentContainerStyle={styles.scrollContainer}
-              keyboardShouldPersistTaps="handled"
-          >
-            <Image source={require("../assets/logo.png")} style={styles.logo} />
+          <Image source={require("../assets/logo.png")} style={styles.logo} />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                value={email}
-                onChangeText={setEmail}
-            />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            value={email}
+            onChangeText={setEmail}
+          />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                secureTextEntry={true}
-                value={password}
-                onChangeText={setPassword}
-            />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={setPassword}
+          />
 
-            <TouchableOpacity style={styles.button} onPress={handleRegister}>
-              <Text style={styles.buttonText}>Register</Text>
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleRegister}>
+            <Text style={styles.buttonText}>Register</Text>
+          </TouchableOpacity>
 
-            <Text style={styles.footerText}>
-              Already have an account?{" "}
-              <Text
-                  style={styles.link}
-                  onPress={() => navigation.navigate("Login")}
-              >
-                Login here
-              </Text>
+          <Text style={styles.footerText}>
+            Already have an account?{" "}
+            <Text
+              style={styles.link}
+              onPress={() => navigation.navigate("Login")}
+            >
+              Login here
             </Text>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </ImageBackground>
+          </Text>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </ImageBackground>
   );
 }
 

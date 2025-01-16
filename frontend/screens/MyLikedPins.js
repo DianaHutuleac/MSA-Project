@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { 
+import {
   View,
   Text,
   FlatList,
@@ -31,7 +31,7 @@ export default function MyLikedPins({ navigation }) {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setPins(response.data);      
+        setPins(response.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching pins:", error);
@@ -51,7 +51,7 @@ export default function MyLikedPins({ navigation }) {
 
   // Pressing a pin sets selectedPin & opens the modal
   const handlePinPress = (pin) => {
-    console.log('User tapped pin:', pin);
+    console.log("User tapped pin:", pin);
     setSelectedPin(pin);
     setModalVisible(true);
   };
@@ -73,7 +73,7 @@ export default function MyLikedPins({ navigation }) {
           data={pins}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.pinItem}
               onPress={() => handlePinPress(item)}
             >
@@ -84,7 +84,8 @@ export default function MyLikedPins({ navigation }) {
               </Text>
               {/* Coordinates */}
               <Text style={styles.infoText}>
-                Lat: {item.latitude.toFixed(5)}, Lng: {item.longitude.toFixed(5)}
+                Lat: {item.latitude.toFixed(5)}, Lng:{" "}
+                {item.longitude.toFixed(5)}
               </Text>
             </TouchableOpacity>
           )}
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: "#2F4F4F", // dark background
     // optional shadow or elevation
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
@@ -142,12 +143,12 @@ const styles = StyleSheet.create({
   storyText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#fff",    // white text
+    color: "#fff", // white text
     marginBottom: 8,
   },
   infoText: {
     fontSize: 14,
-    color: "#fff",    // also white text
+    color: "#fff", // also white text
     marginBottom: 4,
   },
 

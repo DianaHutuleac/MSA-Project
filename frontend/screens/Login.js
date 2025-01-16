@@ -18,17 +18,17 @@ import { AuthContext } from "../context/AuthContext";
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {setToken} = useContext(AuthContext);
+  const { setToken } = useContext(AuthContext);
   const handleLogin = async () => {
     if (email && password) {
       try {
         // 1) Call the new /auth/login endpoint
         const response = await axios.post(
-            "http://172.20.10.4:8080/auth/login",
-            {
-              email,
-              password,
-            }
+          "http://172.20.10.4:8080/auth/login",
+          {
+            email,
+            password,
+          }
         );
 
         // 2) The response should contain { token, user: { ... } }
@@ -53,51 +53,51 @@ export default function Login({ navigation }) {
   };
 
   return (
-      <ImageBackground
-          source={require("../assets/background_map.jpeg")}
-          style={styles.background}
+    <ImageBackground
+      source={require("../assets/background_map.jpeg")}
+      style={styles.background}
+    >
+      <View style={styles.overlay} />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <View style={styles.overlay} />
-        <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
-          <ScrollView contentContainerStyle={styles.container}>
-            <Image source={require("../assets/logo.png")} style={styles.logo} />
+        <ScrollView contentContainerStyle={styles.container}>
+          <Image source={require("../assets/logo.png")} style={styles.logo} />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={setEmail}
-                autoCapitalize="none"
-            />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+          />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                secureTextEntry={true}
-                value={password}
-                onChangeText={setPassword}
-            />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={setPassword}
+          />
 
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
-              <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
 
-            <Text style={styles.footerText}>
-              Don't have an account?{" "}
-              <Text
-                  style={styles.link}
-                  onPress={() => navigation.navigate("Register")}
-              >
-                Register here
-              </Text>
+          <Text style={styles.footerText}>
+            Don't have an account?{" "}
+            <Text
+              style={styles.link}
+              onPress={() => navigation.navigate("Register")}
+            >
+              Register here
             </Text>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </ImageBackground>
+          </Text>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </ImageBackground>
   );
 }
 

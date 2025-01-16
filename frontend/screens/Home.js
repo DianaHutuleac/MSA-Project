@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
-import axios from 'axios';
-import DropdownMenu from '../components/menus/DropdownMenu';
-import AddPinButton from '../components/buttons/AddPinButton';
-import MapWithMarkers from '../components/MapWithMarkers';
-import StoryModal from '../components/modals/StoryModal';
-import { AuthContext } from '../context/AuthContext';
-import ChallengeStoryButton from '../components/buttons/ChallengeStoryButton';
-import ChallengeStoryModal from '../components/modals/ChallengeStoryModal';
+import React, { useState, useEffect, useContext } from "react";
+import { View, StyleSheet, Alert } from "react-native";
+import axios from "axios";
+import DropdownMenu from "../components/menus/DropdownMenu";
+import AddPinButton from "../components/buttons/AddPinButton";
+import MapWithMarkers from "../components/MapWithMarkers";
+import StoryModal from "../components/modals/StoryModal";
+import { AuthContext } from "../context/AuthContext";
+import ChallengeStoryButton from "../components/buttons/ChallengeStoryButton";
+import ChallengeStoryModal from "../components/modals/ChallengeStoryModal";
 
 export default function Home({ navigation }) {
   const { token, userId } = useContext(AuthContext);
@@ -15,17 +15,15 @@ export default function Home({ navigation }) {
   const [addPinMode, setAddPinMode] = useState(false);
   const [newPinCoordinate, setNewPinCoordinate] = useState(null);
   const [storyModalVisible, setStoryModalVisible] = useState(false);
-  const [storyText, setStoryText] = useState('');
-  const [visibilityDuration, setVisibilityDuration] = useState('PERMANENT');
+  const [storyText, setStoryText] = useState("");
+  const [visibilityDuration, setVisibilityDuration] = useState("PERMANENT");
   const [activeChallenge, setActiveChallenge] = useState(null);
   const [modalType, setModalType] = useState(null); // Tracks the type of modal to show
-  const [challengeWinnerPin, setChallengeWinnerPin] = useState(null);
 
   useEffect(() => {
     if (token) {
       console.log("Token changed, fetching pins"); // Debug log
       fetchAllPins(token);
-      fetchChallengeWinnerPin(token);
     }
   }, [token]);
 
@@ -41,6 +39,7 @@ export default function Home({ navigation }) {
         story: pin.story,
         likeCount: pin.numberOfLikes || 0,
         challengeId: pin.challengeId || null,
+        userId: pin.userId,
       }));
       console.log("Fetched Markers:", fetchedMarkers); // Debug log
       setMarkers(fetchedMarkers);
@@ -49,12 +48,15 @@ export default function Home({ navigation }) {
       Alert.alert("Error", "Could not load pins.");
     }
   };
-    
+
   const fetchActiveChallenge = async () => {
     try {
-      const response = await axios.get("http://172.20.10.4:8080/challenges/active", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "http://172.20.10.4:8080/challenges/active",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (response.status === 200) {
         setActiveChallenge(response.data);
       } else if (response.status === 404) {
@@ -64,23 +66,21 @@ export default function Home({ navigation }) {
       console.error("Error fetching active challenge:", error);
     }
   };
-  
 
   const handleAddPinPress = () => {
     setAddPinMode(true);
-    setModalType('normal'); // Prepare for a normal pin
+    setModalType("normal"); // Prepare for a normal pin
     setStoryModalVisible(false); // Ensure modal is not visible initially
-    Alert.alert('Pin Placement', 'Tap on the map to place your new pin');
+    Alert.alert("Pin Placement", "Tap on the map to place your new pin");
   };
 
   const handleAddChallengePinPress = async () => {
     await fetchActiveChallenge(); // Ensure active challenge is loaded
     setAddPinMode(true);
-    setModalType('challenge'); // Prepare for a challenge pin
+    setModalType("challenge"); // Prepare for a challenge pin
     setStoryModalVisible(false); // Ensure modal is not visible initially
-    Alert.alert('Challenge Pin', 'Tap on the map to place your challenge pin');
+    Alert.alert("Challenge Pin", "Tap on the map to place your challenge pin");
   };
-
 
   const handleMapPress = (e) => {
     if (addPinMode) {
@@ -90,41 +90,15 @@ export default function Home({ navigation }) {
         setAddPinMode(false); // Disable pin mode after selecting coordinates
         setStoryModalVisible(true); // Open the appropriate modal
       } else {
-        console.error('Invalid map press event:', e);
-        Alert.alert('Error', 'Could not retrieve coordinates from map press.');
+        console.error("Invalid map press event:", e);
+        Alert.alert("Error", "Could not retrieve coordinates from map press.");
       }
     }
   };
 
-  const fetchChallengeWinnerPin = async (token) => {
-  try {
-    const response = await axios.put(
-      "http://172.20.10.4:8080/challenges/process-previous-challenge",
-      {}, // PUT requests can include a body; pass an empty object if not needed
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Pass the token for authentication
-        },
-      }
-    );
-
-    if (response.status === 200) {
-      setChallengeWinnerPin(response.data);
-    } else {
-      console.error("Failed to fetch the winning pin:", response.status);
-      setChallengeWinnerPin(null);
-    }
-  } catch (error) {
-    console.error("Error fetching the winning pin:", error);
-    return null;
-  }
-};
-
-
-
   const handleSavePin = async (pinData) => {
     try {
-      const response = await axios.post('http://172.20.10.4:8080/pins', pinData, {
+      const response = await axios.post("http://172.20.10.4:8080/pins", pinData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const createdPin = {
@@ -133,19 +107,21 @@ export default function Home({ navigation }) {
         story: response.data.story,
         isLiked: false,
         likeCount: response.data.numberOfLikes || 0,
+        challengeId: response.data.challengeId || null,
+        userId: response.data.userId,
       };
       setMarkers((prev) => [...prev, createdPin]);
       resetModal();
     } catch (error) {
-      console.error('Error saving pin:', error);
-      Alert.alert('Error', 'Could not save pin.');
+      console.error("Error saving pin:", error);
+      Alert.alert("Error", "Could not save pin.");
     }
   };
-  
+
   const resetModal = () => {
     setNewPinCoordinate(null);
-    setStoryText('');
-    setVisibilityDuration('PERMANENT');
+    setStoryText("");
+    setVisibilityDuration("PERMANENT");
     setModalType(null);
     setStoryModalVisible(false); // Close the modal
   };
@@ -156,8 +132,9 @@ export default function Home({ navigation }) {
       story: storyText,
       latitude: newPinCoordinate[1],
       longitude: newPinCoordinate[0],
-      visibilityDuration: modalType === 'challenge' ? 'CHALLENGE' : visibilityDuration,
-      ...(modalType === 'challenge' && { challengeId: activeChallenge.id }),
+      visibilityDuration:
+        modalType === "challenge" ? "CHALLENGE" : visibilityDuration,
+      ...(modalType === "challenge" && { challengeId: activeChallenge.id }),
     };
     handleSavePin(pinData);
   };
@@ -170,12 +147,11 @@ export default function Home({ navigation }) {
       <MapWithMarkers
         markers={markers}
         onMapPress={handleMapPress}
-        onPinPress={(pin) => Alert.alert('Pin Details', pin.story)}
-        challengeWinnerPin = {challengeWinnerPin}
+        onPinPress={(pin) => Alert.alert("Pin Details", pin.story)}
       />
-      {modalType === 'normal' && (
+      {modalType === "normal" && (
         <StoryModal
-        visible={storyModalVisible}
+          visible={storyModalVisible}
           storyText={storyText}
           setStoryText={setStoryText}
           visibilityDuration={visibilityDuration}
@@ -184,8 +160,8 @@ export default function Home({ navigation }) {
           onCancel={resetModal}
         />
       )}
-      {modalType === 'challenge' && (
-          <ChallengeStoryModal
+      {modalType === "challenge" && (
+        <ChallengeStoryModal
           visible={storyModalVisible}
           onClose={resetModal}
           onSave={handlePinSubmit}

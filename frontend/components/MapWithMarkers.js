@@ -1,10 +1,9 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
-import { StyleSheet, Modal, View, Text, TouchableOpacity, TextInput, Button, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { WebView } from 'react-native-webview';
-import { Ionicons } from '@expo/vector-icons';
-import axios from 'axios';
-import { AuthContext } from '../context/AuthContext';
-import PinModal from './modals/PinModal';
+import React, { useState, useContext, useRef, useEffect } from "react";
+import { StyleSheet } from "react-native";
+import { WebView } from "react-native-webview";
+import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
+import PinModal from "./modals/PinModal";
 
 export default function MapWithMarkers({ markers, onMapPress }) {
   const { token, userId } = useContext(AuthContext);
@@ -16,38 +15,39 @@ export default function MapWithMarkers({ markers, onMapPress }) {
     fetchLastProcessedWinner();
   }, []);
 
+  console.log(JSON.stringify(markers));
   const handleWebViewMessage = (event) => {
     const data = JSON.parse(event.nativeEvent.data);
-    
-    if (data.type === 'mapPress') {
+
+    if (data.type === "mapPress") {
       onMapPress(data);
-    } else if (data.type === 'pinClick') {
+    } else if (data.type === "pinClick") {
       console.log(data);
       setSelectedPin(data);
-    } else if (data.type === 'moreClick') {
+    } else if (data.type === "moreClick") {
       setModalVisible(true);
     }
-  }; 
+  };
 
   const fetchLastProcessedWinner = async () => {
     try {
       // Endpoint must match your backend route
       // e.g. GET /challenges/last-processed/winner
       const response = await axios.get(
-        'http://172.20.10.4:8080/challenges/last-processed/winner',
+        "http://172.20.10.4:8080/challenges/last-processed/winner",
         {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       setWinnerPin(response.data); // store the PinResponseDto
     } catch (error) {
-      console.error('Error fetching last processed winner:', error);
+      console.error("Error fetching last processed winner:", error);
       // Optional: Alert user or silently fail
       // Alert.alert('Error', 'Could not fetch last processed challenge winner.');
     }
   };
 
-  const winnerIdString = winnerPin ? winnerPin.id.toString() : 'null';
+  const winnerIdString = winnerPin ? winnerPin.id.toString() : "null";
 
   const mapHtml = `
     <!DOCTYPE html>
@@ -89,6 +89,7 @@ export default function MapWithMarkers({ markers, onMapPress }) {
                 viewBox="0 0 24 24"
                 fill="#F26CA7"
                 xmlns="http://www.w3.org/2000/svg"
+                stroke="black" stroke-width="0.5"
               >
                 <path d="M12 2C8.68636 2 6 4.68636 6 8C6 11.8236 9.65227 16.2513 11.5091 18.5645C11.7441 18.8627 12.2559 18.8627 12.4909 18.5645C14.3477 16.2513 18 11.8236 18 8C18 4.68636 15.3136 2 12 2ZM12 10.2C10.5652 10.2 9.4 9.03484 9.4 7.6C9.4 6.16516 10.5652 5 12 5C13.4348 5 14.6 6.16516 14.6 7.6C14.6 9.03484 13.4348 10.2 12 10.2Z"></path>
               </svg>
@@ -107,6 +108,7 @@ export default function MapWithMarkers({ markers, onMapPress }) {
                 viewBox="0 0 24 24"
                 fill="#7E007B"
                 xmlns="http://www.w3.org/2000/svg"
+                stroke="#fff" stroke-width="0.5"
               >
                 <path d="M12 2C8.68636 2 6 4.68636 6 8C6 11.8236 9.65227 16.2513 11.5091 18.5645C11.7441 18.8627 12.2559 18.8627 12.4909 18.5645C14.3477 16.2513 18 11.8236 18 8C18 4.68636 15.3136 2 12 2ZM12 10.2C10.5652 10.2 9.4 9.03484 9.4 7.6C9.4 6.16516 10.5652 5 12 5C13.4348 5 14.6 6.16516 14.6 7.6C14.6 9.03484 13.4348 10.2 12 10.2Z"></path>
               </svg>
@@ -119,7 +121,7 @@ export default function MapWithMarkers({ markers, onMapPress }) {
 
           const goldWinnerPin = L.divIcon({
             html: \`
-              <svg width="60" height="60" viewBox="0 0 24 24" fill="gold"
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="gold" stroke="black" stroke-width="0.5" xmlns="http://www.w3.org/2000/svg" "
                    xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2C8.68636 2 6 4.68636 6 8C6 
                          11.8236 9.65227 16.2513 11.5091 
@@ -144,7 +146,7 @@ export default function MapWithMarkers({ markers, onMapPress }) {
           const WINNER_ID = "${winnerIdString}";
 
           markersData.forEach(marker => {
-            const pinIcon = marker.challengeId ? challengePin : pinkPin;
+            let pinIcon = marker.challengeId ? challengePin : pinkPin;
 
             if (marker.id.toString() === WINNER_ID) {
               pinIcon = goldWinnerPin;
@@ -201,22 +203,22 @@ export default function MapWithMarkers({ markers, onMapPress }) {
   return (
     <>
       <WebView
-        originWhitelist={['*']}
+        originWhitelist={["*"]}
         source={{ html: mapHtml }}
         onMessage={handleWebViewMessage}
         style={styles.map}
       />
 
-        <PinModal
-          visible={modalVisible}
-          onClose={() => {
-            setModalVisible(false);
-            setSelectedPin(null);
-          }}
-          pin={selectedPin}
-          token={token}
-          userId={userId}
-        />
+      <PinModal
+        visible={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+          setSelectedPin(null);
+        }}
+        pin={selectedPin}
+        token={token}
+        userId={userId}
+      />
     </>
   );
 }
@@ -227,23 +229,23 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalContainer: {
-    width: '85%',
-    backgroundColor: '#fff',
-    height: '60%',
+    width: "85%",
+    backgroundColor: "#fff",
+    height: "60%",
     borderRadius: 10,
     padding: 20,
   },
   storyScrollView: {
     maxHeight: 200, // Adjust height to fit the modal
-    backgroundColor: '#f9f9f9', // Light background for contrast
+    backgroundColor: "#f9f9f9", // Light background for contrast
     borderRadius: 12, // Rounded corners
     padding: 15, // Space inside the box
-    shadowColor: '#000', // Subtle shadow
+    shadowColor: "#000", // Subtle shadow
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -252,62 +254,62 @@ const styles = StyleSheet.create({
   modalStoryText: {
     fontSize: 16,
     lineHeight: 24, // Increase line spacing for better readability
-    color: '#333', // Dark gray for the text
-    fontFamily: 'System', // You can change this to a custom font if desired
-  },  
+    color: "#333", // Dark gray for the text
+    fontFamily: "System", // You can change this to a custom font if desired
+  },
   closeIcon: {
-    position: 'absolute',
+    position: "absolute",
     top: 1,
     right: 1,
     zIndex: 1,
   },
   interactRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
   },
   likeButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   likeText: {
     marginLeft: 5,
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
-  
+
   commentSection: {
     marginBottom: 15,
     borderTopWidth: 1,
-    borderTopColor: '#ddd',
+    borderTopColor: "#ddd",
     paddingTop: 10,
   },
   commentTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    color: '#444',
-    textAlign: 'center', // Center the title
+    color: "#444",
+    textAlign: "center", // Center the title
   },
   commentInput: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 8,
     padding: 10,
     flex: 1,
     minHeight: 50, // Increased minimum height
     maxHeight: 120, // Slightly higher maximum height
     multiline: true,
-    textAlignVertical: 'top',
-    backgroundColor: '#f9f9f9', // Matches the aesthetic of the story and comment sections
+    textAlignVertical: "top",
+    backgroundColor: "#f9f9f9", // Matches the aesthetic of the story and comment sections
   },
   commentList: {
     maxHeight: 100, // Limit height to avoid overflowing
     marginBottom: 15,
     borderRadius: 12,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
     padding: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -316,16 +318,15 @@ const styles = StyleSheet.create({
   commentItem: {
     fontSize: 15,
     lineHeight: 22,
-    color: '#555',
-    backgroundColor: '#fff',
+    color: "#555",
+    backgroundColor: "#fff",
     padding: 10,
     borderRadius: 8,
     marginBottom: 10, // Spacing between comments
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 1,
   },
 });
-

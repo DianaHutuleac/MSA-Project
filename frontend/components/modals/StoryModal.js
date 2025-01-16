@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Modal,
   View,
@@ -9,8 +9,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-} from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
 export default function StoryModal({
   visible,
@@ -34,7 +34,7 @@ export default function StoryModal({
       */}
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         {/*
           Dark overlay to center the "card" modal container.
@@ -68,12 +68,18 @@ export default function StoryModal({
               <View style={styles.pickerWrapper}>
                 <Picker
                   selectedValue={visibilityDuration}
-                  onValueChange={(itemValue) => setVisibilityDuration(itemValue)}
+                  onValueChange={(itemValue) =>
+                    setVisibilityDuration(itemValue)
+                  }
                 >
-                  <Picker.Item label="1 Day" value="DAY" color="#A9A9A9"/>
-                  <Picker.Item label="1 Week" value="WEEK" color="#A9A9A9"/>
-                  <Picker.Item label="1 Month" value="MONTH" color="#A9A9A9"/>
-                  <Picker.Item label="Permanent" value="PERMANENT" color="#A9A9A9"/>
+                  <Picker.Item label="1 Day" value="DAY" color="#A9A9A9" />
+                  <Picker.Item label="1 Week" value="WEEK" color="#A9A9A9" />
+                  <Picker.Item label="1 Month" value="MONTH" color="#A9A9A9" />
+                  <Picker.Item
+                    label="Permanent"
+                    value="PERMANENT"
+                    color="#A9A9A9"
+                  />
                 </Picker>
               </View>
 
@@ -81,7 +87,10 @@ export default function StoryModal({
                 <TouchableOpacity style={styles.saveButton} onPress={onSave}>
                   <Text style={styles.saveButtonText}>Save Pin</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
+                <TouchableOpacity
+                  style={styles.cancelButton}
+                  onPress={onCancel}
+                >
                   <Text style={styles.cancelButtonText}>Cancel</Text>
                 </TouchableOpacity>
               </View>
@@ -100,9 +109,9 @@ const styles = StyleSheet.create({
   */
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   /*
@@ -110,14 +119,14 @@ const styles = StyleSheet.create({
     and maxHeight to prevent over-expanding.
   */
   modalContainer: {
-    width: '90%',
-    maxHeight: '80%',
-    backgroundColor: '#f9f9f9',
+    width: "90%",
+    maxHeight: "80%",
+    backgroundColor: "#f9f9f9",
     borderRadius: 10,
     padding: 20,
 
     // A bit of elevation + shadow for Android/iOS
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -135,56 +144,56 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     marginBottom: 10,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: "600",
+    color: "#333",
   },
   textInput: {
-    backgroundColor: '#f3f3f3',
+    backgroundColor: "#f3f3f3",
     borderRadius: 8,
     padding: 10,
     fontSize: 14,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
     minHeight: 80,
     maxHeight: 200,
     marginBottom: 15,
   },
   label: {
     marginBottom: 5,
-    fontWeight: '600',
-    color: '#666',
+    fontWeight: "600",
+    color: "#666",
   },
   pickerWrapper: {
-    backgroundColor: '#f3f3f3',
+    backgroundColor: "#f3f3f3",
     borderRadius: 8,
     marginBottom: 15,
   },
   modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   saveButton: {
-    backgroundColor: '#2F4F4F',
+    backgroundColor: "#2F4F4F",
     padding: 12,
     borderRadius: 8,
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     marginRight: 10,
   },
   saveButtonText: {
-    color: '#fff',
-    fontWeight: '600',
+    color: "#fff",
+    fontWeight: "600",
   },
   cancelButton: {
-    backgroundColor: 'transparent',
-    borderColor: '#d9534f',
+    backgroundColor: "transparent",
+    borderColor: "#d9534f",
     borderWidth: 1,
     padding: 12,
     borderRadius: 8,
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   cancelButtonText: {
-    color: '#d9534f',
-    fontWeight: '600',
+    color: "#d9534f",
+    fontWeight: "600",
   },
 });

@@ -13,6 +13,7 @@ import com.citystories.backend.mapper.PinMapper;
 import com.citystories.backend.repository.ChallengeRepository;
 import com.citystories.backend.repository.PinRepository;
 import com.citystories.backend.service.ChallengeService;
+import com.citystories.backend.service.PinService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +26,12 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     private final ChallengeRepository challengeRepository;
     private final PinRepository pinRepository;
+    private final PinService pinService;
 
-    public ChallengeServiceImpl(ChallengeRepository challengeRepository, PinRepository pinRepository) {
+    public ChallengeServiceImpl(ChallengeRepository challengeRepository, PinRepository pinRepository, PinServiceImpl pinService) {
         this.challengeRepository = challengeRepository;
         this.pinRepository = pinRepository;
+        this.pinService = pinService;
     }
 
     @Override
@@ -114,7 +117,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         // 5) Delete all non-winning pins
         challengePins.stream()
                 .filter(pin -> !pin.equals(winningPin))
-                .forEach(pinRepository::delete);
+                .forEach(pin -> pinService.deletePin(pin.getId()));
 
         // 6) Mark challenge as processed & set the winner
         previousChallenge.setProcessed(true);

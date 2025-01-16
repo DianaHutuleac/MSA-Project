@@ -24,9 +24,9 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/auth/**").permitAll();
-                    auth.requestMatchers("/challenges/active").hasAuthority("ROLE_USER");
-                    auth.requestMatchers( "/challenges/last-processed/winner").hasAuthority("ROLE_USER");
-                    auth.requestMatchers("/challenges/**").hasAuthority("ROLE_ADMIN"); // Restrict to admins
+                    auth.requestMatchers("/challenges/active").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN");
+                    auth.requestMatchers( "/challenges/last-processed/winner").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN");
+                    auth.requestMatchers("/challenges/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN");
                     auth.anyRequest().authenticated();
                 })
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

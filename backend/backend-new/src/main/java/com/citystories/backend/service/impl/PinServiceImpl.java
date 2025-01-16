@@ -91,11 +91,38 @@ public class PinServiceImpl implements PinService {
     @Override
     public PinResponseDto updatePin(Long id, PinEditDto pinEditDto) {
         Pin pin = findPinById(id);
-        pinEditDto.setId(id);
-        Pin editedPin = applyEditsToPin(pinEditDto, pin);
-        return mapToResponseDto(pinRepository.save(editedPin));
+
+        // Update story if provided
+        if (pinEditDto.getStory() != null) {
+            pin.setStory(pinEditDto.getStory());
+        }
+
+        // Update visibility if provided
+        if (pinEditDto.getVisibilityDuration() != null) {
+            pin.setVisibilityDuration(pinEditDto.getVisibilityDuration());
+            // Optionally recalc expiresAt if you want dynamic expiration changes
+            switch (pinEditDto.getVisibilityDuration()) {
+                case DAY -> pin.setExpiresAt(LocalDateTime.now().plusDays(1));
+                case WEEK -> pin.setExpiresAt(LocalDateTime.now().plusWeeks(1));
+                case MONTH -> pin.setExpiresAt(LocalDateTime.now().plusMonths(1));
+                case PERMANENT -> pin.setExpiresAt(null);
+            }
+        }
+
+        // Update coordinates if you allow editing them
+        if (pinEditDto.getLatitude() != null) {
+            pin.setLatitude(pinEditDto.getLatitude());
+        }
+        if (pinEditDto.getLongitude() != null) {
+            pin.setLongitude(pinEditDto.getLongitude());
+        }
+
+        Pin saved = pinRepository.save(pin);
+        return mapToResponseDto(saved);
     }
 
+
+    @Transactional // IMPORTANT: ensures all references are removed in one transaction
     @Override
     public void deletePin(Long id) {
         Pin pin = findPinById(id);

@@ -1,14 +1,14 @@
 import React from "react";
-import { 
-  View, 
-  Text, 
-  Modal, 
-  StyleSheet, 
-  Button, 
-  TextInput, 
+import {
+  View,
+  Text,
+  Modal,
+  StyleSheet,
+  Button,
+  TextInput,
   Platform,
   KeyboardAvoidingView,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -32,8 +32,8 @@ export default function ChallengeModal({
         style={styles.modalContainer}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <ScrollView 
-          contentContainerStyle={styles.scrollContent} 
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.modalContent}>

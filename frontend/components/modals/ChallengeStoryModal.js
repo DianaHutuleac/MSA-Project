@@ -65,13 +65,15 @@ export default function ChallengeStoryModal({
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.modalContainer}>
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
               <Ionicons name="close" size={24} color="#333" />
             </TouchableOpacity>
             {activeChallenge ? (
               <>
                 <Text style={styles.modalTitle}>Active Challenge</Text>
-                <Text style={styles.challengeText}>{activeChallenge.theme}</Text>
+                <Text style={styles.challengeText}>
+                  {activeChallenge.theme}
+                </Text>
                 <TextInput
                   style={styles.textInput}
                   multiline
@@ -80,16 +82,24 @@ export default function ChallengeStoryModal({
                   placeholder="Write your story for this challenge..."
                 />
                 <View style={styles.modalButtons}>
-                  <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                  <TouchableOpacity
+                    style={styles.saveButton}
+                    onPress={handleSave}
+                  >
                     <Text style={styles.saveButtonText}>Submit Story</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+                  <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={onClose}
+                  >
                     <Text style={styles.cancelButtonText}>Cancel</Text>
                   </TouchableOpacity>
                 </View>
               </>
+            ) : activeChallenge === "Not Found" ? (
+              <Text style={styles.loadingText}>No Challenges Available.</Text>
             ) : (
-              activeChallenge === "Not Found" ? <Text style={styles.loadingText}>No Challenges Available.</Text> : <Text style={styles.loadingText}>Loading Challenge...</Text>
+              <Text style={styles.loadingText}>Loading Challenge...</Text>
             )}
           </View>
         </ScrollView>

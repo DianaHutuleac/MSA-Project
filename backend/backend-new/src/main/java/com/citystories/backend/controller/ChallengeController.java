@@ -49,7 +49,6 @@ public class ChallengeController {
     }
 
     @GetMapping("/active")
-    @PreAuthorize("hasAuthority('ROLE_USER')") // Restrict to authenticated users
     public ResponseEntity<ChallengeGetDto> getActiveChallenge() {
         ChallengeGetDto activeChallenge = challengeService.getActiveChallenge();
         return ResponseEntity.status(HttpStatus.OK).body(activeChallenge);
@@ -63,14 +62,13 @@ public class ChallengeController {
     }
 
     @GetMapping("/{challengeId}/winner")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<PinResponseDto> getChallengeWinner(@PathVariable Long challengeId) {
         PinResponseDto winner = challengeService.getChallengeWinner(challengeId);
         return ResponseEntity.ok(winner);
     }
 
     @GetMapping("/last-processed/winner")
-    @PreAuthorize("hasAuthority('ROLE_USER')") // Restrict to authenticated users
     public ResponseEntity<PinResponseDto> getLastProcessedWinner() {
         PinResponseDto winner = challengeService.getLastProcessedChallengeWinner();
         return ResponseEntity.ok(winner);

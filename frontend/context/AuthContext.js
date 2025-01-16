@@ -1,6 +1,6 @@
-import React, { createContext, useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { jwtDecode } from 'jwt-decode';
+import React, { createContext, useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext();
 
@@ -8,23 +8,25 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(true); // To ensure context is ready before rendering
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
     const loadToken = async () => {
       try {
-        const storedToken = await AsyncStorage.getItem('authToken');
+        const storedToken = await AsyncStorage.getItem("authToken");
         if (storedToken) {
-          console.log('Stored Token:', storedToken); // Log the correct variable
+          console.log("Stored Token:", storedToken); // Log the correct variable
           const decoded = jwtDecode(storedToken);
-          console.log('Decoded Token:', decoded); // Log decoded token
-          
+          console.log("Decoded Token:", decoded); // Log decoded token
+
           setToken(storedToken);
           setUserId(decoded.sub);
+          setUserRole(decoded.role);
         } else {
-          console.log('No token found in AsyncStorage');
+          console.log("No token found in AsyncStorage");
         }
       } catch (error) {
-        console.error('Error loading token:', error);
+        console.error("Error loading token:", error);
       } finally {
         setLoading(false); // Ensure loading is set to false
       }
@@ -35,11 +37,11 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await AsyncStorage.removeItem('authToken');
+      await AsyncStorage.removeItem("authToken");
       setToken(null);
       setUserId(null);
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.error("Error during logout:", error);
     }
   };
 
@@ -48,7 +50,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ token, setToken, userId, logout }}>
+    <AuthContext.Provider value={{ token, setToken, userId, logout, userRole }}>
       {children}
     </AuthContext.Provider>
   );

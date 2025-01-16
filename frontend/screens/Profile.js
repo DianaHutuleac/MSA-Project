@@ -32,9 +32,12 @@ export default function Profile({ navigation }) {
 
     const localDateTime = `${startDateTime.getFullYear()}-${String(
       startDateTime.getMonth() + 1
-    ).padStart(2, "0")}-${String(startDateTime.getDate()).padStart(2, "0")}T${String(
-      startDateTime.getHours()
-    ).padStart(2, "0")}:${String(startDateTime.getMinutes()).padStart(2, "0")}:00`;
+    ).padStart(2, "0")}-${String(startDateTime.getDate()).padStart(
+      2,
+      "0"
+    )}T${String(startDateTime.getHours()).padStart(2, "0")}:${String(
+      startDateTime.getMinutes()
+    ).padStart(2, "0")}:00`;
 
     console.log("Local DateTime:", localDateTime);
 
@@ -74,7 +77,10 @@ export default function Profile({ navigation }) {
         }
       );
       // The response should contain the winning pin
-      Alert.alert("Success", `Previous challenge processed!\nWinner: ${response.data.story}`);
+      Alert.alert(
+        "Success",
+        `Previous challenge processed!\nWinner: ${response.data.story}`
+      );
       // Optionally store the winner's pin in your state if you want
       // something like: setWinnerPin(response.data);
     } catch (error) {
@@ -89,7 +95,7 @@ export default function Profile({ navigation }) {
 
   const handleViewLikedPins = () => {
     navigation.navigate("MyLikedPins");
-  }
+  };
   return (
     <SafeAreaView style={styles.safeArea}>
       <DropdownMenu navigation={navigation} />
@@ -99,18 +105,28 @@ export default function Profile({ navigation }) {
         </Text> */}
         <Image source={require("../assets/logo.png")} style={styles.logo} />
 
-        <TouchableOpacity style={styles.myPinsButton} onPress={handleViewMyPins}>
+        <TouchableOpacity
+          style={styles.myPinsButton}
+          onPress={handleViewMyPins}
+        >
           <Ionicons name="location-outline" size={24} color="#fff" />
           <Text style={styles.myPinsText}>My Pins</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.myPinsButton} onPress={handleViewLikedPins}>
+        <TouchableOpacity
+          style={styles.myPinsButton}
+          onPress={handleViewLikedPins}
+        >
           {/* Heart Icon */}
-          <Ionicons name="heart" size={24} color="#fff" style={styles.iconSpacing} />
+          <Ionicons
+            name="heart"
+            size={24}
+            color="#fff"
+            style={styles.iconSpacing}
+          />
           {/* Location Icon */}
           <Text style={styles.myPinsText}>Liked Pins</Text>
         </TouchableOpacity>
-
 
         {userInfo.role === "ROLE_ADMIN" && (
           <>
@@ -123,11 +139,13 @@ export default function Profile({ navigation }) {
             </TouchableOpacity>
 
             <TouchableOpacity
-            style={styles.processChallengeButton}
-            onPress={handleProcessPreviousChallenge}
+              style={styles.processChallengeButton}
+              onPress={handleProcessPreviousChallenge}
             >
-            <Ionicons name="checkmark-done-outline" size={24} color="#333" />
-            <Text style={styles.processChallengeText}>Process Previous Challenge</Text>
+              <Ionicons name="checkmark-done-outline" size={24} color="#333" />
+              <Text style={styles.processChallengeText}>
+                Process Previous Challenge
+              </Text>
             </TouchableOpacity>
           </>
         )}
@@ -156,7 +174,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#fffff9",
-  },  
+  },
   container: {
     flex: 1,
     padding: 20,
@@ -190,7 +208,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
   },
-  
+
   logoutText: {
     fontSize: 16,
     fontWeight: "bold",
